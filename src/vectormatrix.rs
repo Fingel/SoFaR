@@ -67,6 +67,7 @@ pub fn iau_a2tf(ndp: i32, angle: f64) -> (char, [i32; 4]) {
 
 pub use iau_a2tf as angle_to_hours_minutes_seconds_fraction;
 
+//TODO: optimize
 ///  - - - - - - - -
 ///   i a u D 2 t f
 ///  - - - - - - - -
@@ -147,6 +148,7 @@ pub fn iau_d2tf(ndp: i32, days: f64) -> (char, [i32; 4]) {
     // Express the unit of each field in resolution units.
     nrs = 1;
     for _ in 1..=ndp {
+        //TODO: Optimize
         nrs *= 10;
     }
     rs = nrs as f64;
@@ -157,6 +159,7 @@ pub fn iau_d2tf(ndp: i32, days: f64) -> (char, [i32; 4]) {
     a = dnint(rs * a);
 
     // Break into fields
+    //TODO: no need for mut
     let mut ah = a / rh;
     ah = dint(ah);
     a -= ah * rh;
