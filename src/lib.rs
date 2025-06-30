@@ -1,6 +1,5 @@
+pub mod constants;
 pub mod vectormatrix;
-
-pub const DAYSEC: f64 = 86400.0;
 
 /// Round to nearest whole number (double)
 /// This is equivalent to Rust `x.round()`
