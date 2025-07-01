@@ -404,6 +404,8 @@ pub mod rotations {
 /// - S2P       spherical to p-vector
 /// - P2S       p-vector to spherical
 pub mod sphere_cart_conv {
+    use crate::vml::pvrm::vec_ops::{pm, sxp};
+
     ///  Convert spherical coordinates to Cartesian.
     ///
     ///  This function is part of the International Astronomical Union's
@@ -424,7 +426,8 @@ pub mod sphere_cart_conv {
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
     pub fn s2c(theta: f64, phi: f64) -> [f64; 3] {
-        todo!();
+        let cp = phi.cos();
+        [theta.cos() * cp, theta.sin() * cp, phi.sin()]
     }
     pub use s2c as spherical_to_unit_vector;
 
@@ -456,7 +459,13 @@ pub mod sphere_cart_conv {
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
     pub fn c2s(p: [f64; 3]) -> (f64, f64) {
-        todo!();
+        let x = p[0];
+        let y = p[1];
+        let z = p[2];
+        let d2 = x * x + y * y;
+        let theta = if d2 == 0.0 { 0.0 } else { y.atan2(x) };
+        let phi = if z == 0.0 { 0.0 } else { z.atan2(d2.sqrt()) };
+        (theta, phi)
     }
     pub use c2s as unit_vector_to_spherical;
 
@@ -485,7 +494,8 @@ pub mod sphere_cart_conv {
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
     pub fn s2p(theta: f64, phi: f64, r: f64) -> [f64; 3] {
-        todo!();
+        let u = s2c(theta, phi);
+        sxp(r, &u)
     }
     pub use s2p as spherical_to_p_vector;
 
@@ -520,7 +530,9 @@ pub mod sphere_cart_conv {
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
     pub fn p2s(p: [f64; 3]) -> (f64, f64, f64) {
-        todo!();
+        let (theta, phi) = c2s(p);
+        let r = pm(&p);
+        (theta, phi, r)
     }
     pub use p2s as p_vector_to_spherical;
 
@@ -534,7 +546,7 @@ pub mod sphere_cart_conv {
         /// t_sofa.c t_s2c
         #[test]
         fn test_s2c() {
-            let c = s2c(3.0123, 0.999);
+            let c = s2c(3.0123, -0.999);
             assert_approx_eq!(c[0], -0.5366267667260523906, 1e-12);
             assert_approx_eq!(c[1], 0.0697711109765145365, 1e-12);
             assert_approx_eq!(c[2], -0.8409302618566214041, 1e-12);
