@@ -397,3 +397,175 @@ pub mod rotations {
         }
     }
 }
+
+/// Spherical/Cartesian conversions
+///   S2C       spherical to unit vector
+///   C2S       unit vector to spherical
+///   S2P       spherical to p-vector
+///   P2S       p-vector to spherical
+pub mod sphere_cart_conv {
+    ///  Convert spherical coordinates to Cartesian.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     theta    double       longitude angle (radians)
+    ///     phi      double       latitude angle (radians)
+    ///
+    ///  Returned:
+    ///     c        double[3]    direction cosines
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    ///
+    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    pub fn s2c(theta: f64, phi: f64) -> [f64; 3] {
+        todo!();
+    }
+    pub use s2c as spherical_to_unit_vector;
+
+    ///  P-vector to spherical coordinates.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     p      double[3]    p-vector
+    ///
+    ///  Returned:
+    ///     theta  double       longitude angle (radians)
+    ///     phi    double       latitude angle (radians)
+    ///
+    ///  Notes:
+    ///
+    ///  1) The vector p can have any magnitude; only its direction is used.
+    ///
+    ///  2) If p is null, zero theta and phi are returned.
+    ///
+    ///  3) At either pole, zero theta is returned.
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    ///
+    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    pub fn c2s(p: [f64; 3]) -> (f64, f64) {
+        todo!();
+    }
+    pub use c2s as unit_vector_to_spherical;
+
+    ///  Convert spherical polar coordinates to p-vector.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     theta   double       longitude angle (radians)
+    ///     phi     double       latitude angle (radians)
+    ///     r       double       radial distance
+    ///
+    ///  Returned:
+    ///     p       double[3]    Cartesian coordinates
+    ///
+    ///  Called:
+    ///     iauS2c       spherical coordinates to unit vector
+    ///     iauSxp       multiply p-vector by scalar
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    ///
+    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    pub fn s2p(theta: f64, phi: f64, r: f64) -> [f64; 3] {
+        todo!();
+    }
+    pub use s2p as spherical_to_p_vector;
+
+    ///  P-vector to spherical polar coordinates.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     p        double[3]    p-vector
+    ///
+    ///  Returned:
+    ///     theta    double       longitude angle (radians)
+    ///     phi      double       latitude angle (radians)
+    ///     r        double       radial distance
+    ///
+    ///  Notes:
+    ///
+    ///  1) If P is null, zero theta, phi and r are returned.
+    ///
+    ///  2) At either pole, zero theta is returned.
+    ///
+    ///  Called:
+    ///     iauC2s       p-vector to spherical
+    ///     iauPm        modulus of p-vector
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    ///
+    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    pub fn p2s(p: [f64; 3]) -> (f64, f64, f64) {
+        todo!();
+    }
+    pub use p2s as p_vector_to_spherical;
+
+    #[allow(clippy::excessive_precision)]
+    #[cfg(test)]
+    mod tests {
+        use assert_approx_eq::assert_approx_eq;
+
+        use super::*;
+
+        /// t_sofa.c t_s2c
+        #[test]
+        fn test_s2c() {
+            let c = s2c(3.0123, 0.999);
+            assert_approx_eq!(c[0], -0.5366267667260523906, 1e-12);
+            assert_approx_eq!(c[1], 0.0697711109765145365, 1e-12);
+            assert_approx_eq!(c[2], -0.8409302618566214041, 1e-12);
+        }
+
+        /// t_sofa.c t_c2s
+        #[test]
+        fn test_c2s() {
+            let p = [100.0, -50.0, 25.0];
+            let (theta, phi) = c2s(p);
+            assert_approx_eq!(theta, -0.4636476090008061162, 1e-14);
+            assert_approx_eq!(phi, 0.2199879773954594463, 1e-14);
+        }
+
+        /// t_sofa.c t_s2p
+        #[test]
+        fn test_s2p() {
+            let p = s2p(-3.21, 0.123, 0.456);
+            assert_approx_eq!(p[0], -0.4514964673880165228, 1e-12);
+            assert_approx_eq!(p[1], 0.0309339427734258688, 1e-12);
+            assert_approx_eq!(p[2], 0.0559466810510877933, 1e-12);
+        }
+
+        /// t_sofa.c t_p2s
+        #[test]
+        fn test_p2s() {
+            let p = [100.0, -50.0, 25.0];
+            let (theta, phi, r) = p2s(p);
+            assert_approx_eq!(theta, -0.4636476090008061162, 1e-12);
+            assert_approx_eq!(phi, 0.2199879773954594463, 1e-12);
+            assert_approx_eq!(r, 114.5643923738960002, 1e-9);
+        }
+    }
+}
