@@ -64,8 +64,7 @@ pub fn iau_a2tf(ndp: i32, angle: f64) -> (char, [i32; 4]) {
     // Scale then use days to h,m,s function.
     iau_d2tf(ndp, angle / D2PI)
 }
-
-pub use iau_a2tf as angle_to_hours_minutes_seconds_fraction;
+pub use iau_a2tf as radians_to_hms;
 
 //TODO: optimize
 ///  - - - - - - - -
@@ -173,19 +172,20 @@ pub fn iau_d2tf(ndp: i32, days: f64) -> (char, [i32; 4]) {
     // Return results
     (sign, [ah as i32, am as i32, r#as as i32, af as i32])
 }
-
-pub use iau_d2tf as days_to_hours_minutes_seconds_fraction;
+pub use iau_d2tf as days_to_hms;
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
+    /// t_sofa.c t_a2tf
     #[test]
     fn test_a2tf() {
         let result = iau_a2tf(4, -3.01234);
         assert_eq!(result, ('-', [11, 30, 22, 6484]));
     }
 
+    /// t_sofa.c t_d2tf
     #[test]
     fn test_d2tf() {
         let result = iau_d2tf(4, -0.987654321);
