@@ -121,7 +121,7 @@ pub mod copy {
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
     pub fn cp(p: &[f64; 3]) -> [f64; 3] {
-        //TODO: This is pointless as vectors implement Copy trait
+        //TODO: This is pointless as arrays implement Copy trait
         [p[0], p[1], p[2]]
     }
 
@@ -147,7 +147,7 @@ pub mod copy {
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
     pub fn cr(r: &[[f64; 3]; 3]) -> [[f64; 3]; 3] {
-        //TODO: This is pointless as vectors implement Copy trait
+        //TODO: This is pointless as arrays implement Copy trait
         [
             [r[0][0], r[0][1], r[0][2]],
             [r[1][0], r[1][1], r[1][2]],
@@ -173,6 +173,7 @@ pub mod copy {
         fn test_cr() {
             let r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
             let c = cr(&r);
+            //TODO let c = r;
             assert_eq!(c, r);
         }
     }
