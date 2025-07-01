@@ -399,10 +399,10 @@ pub mod rotations {
 }
 
 /// Spherical/Cartesian conversions
-///   S2C       spherical to unit vector
-///   C2S       unit vector to spherical
-///   S2P       spherical to p-vector
-///   P2S       p-vector to spherical
+/// - S2C       spherical to unit vector
+/// - C2S       unit vector to spherical
+/// - S2P       spherical to p-vector
+/// - P2S       p-vector to spherical
 pub mod sphere_cart_conv {
     ///  Convert spherical coordinates to Cartesian.
     ///
@@ -566,6 +566,355 @@ pub mod sphere_cart_conv {
             assert_approx_eq!(theta, -0.4636476090008061162, 1e-12);
             assert_approx_eq!(phi, 0.2199879773954594463, 1e-12);
             assert_approx_eq!(r, 114.5643923738960002, 1e-9);
+        }
+    }
+}
+
+///Operations on vectors
+///- PPP       p-vector plus p-vector
+///- PMP       p-vector minus p-vector
+///- PPSP      p-vector plus scaled p-vector
+///- PDP       inner (=scalar=dot) product of two p-vectors
+///- PXP       outer (=vector=cross) product of two p-vectors
+///- PM        modulus of p-vector
+///- PN        normalize p-vector returning modulus
+///- SXP       multiply p-vector by scalar
+pub mod vec_ops {
+    use crate::vml::pvrm::initialize::zp;
+    //TODO: SIMD would probably provide gains for this module
+
+    ///  P-vector addition.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     a        double[3]      first p-vector
+    ///     b        double[3]      second p-vector
+    ///
+    ///  Returned:
+    ///     apb      double[3]      a + b
+    ///
+    ///  Note:
+    ///     It is permissible to re-use the same array for any of the
+    ///     arguments.
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    ///
+    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    pub fn ppp(a: &[f64; 3], b: &[f64; 3]) -> [f64; 3] {
+        [a[0] + b[0], a[1] + b[1], a[2] + b[2]]
+    }
+    pub use ppp as pvector_plus_pvector;
+
+    ///  P-vector subtraction.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     a        double[3]      first p-vector
+    ///     b        double[3]      second p-vector
+    ///
+    ///  Returned:
+    ///     amb      double[3]      a - b
+    ///
+    ///  Note:
+    ///     It is permissible to re-use the same array for any of the
+    ///     arguments.
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    ///
+    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    pub fn pmp(a: &[f64; 3], b: &[f64; 3]) -> [f64; 3] {
+        [a[0] - b[0], a[1] - b[1], a[2] - b[2]]
+    }
+    pub use pmp as pvector_minus_pvector;
+
+    ///  P-vector plus scaled p-vector.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     a      double[3]     first p-vector
+    ///     s      double        scalar (multiplier for b)
+    ///     b      double[3]     second p-vector
+    ///
+    ///  Returned:
+    ///     apsb   double[3]     a + s*b
+    ///
+    ///  Note:
+    ///     It is permissible for any of a, b and apsb to be the same array.
+    ///
+    ///  Called:
+    ///     iauSxp       multiply p-vector by scalar
+    ///     iauPpp       p-vector plus p-vector
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    ///
+    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end
+    pub fn ppsp(a: &[f64; 3], s: f64, b: &[f64; 3]) -> [f64; 3] {
+        let sb = sxp(s, b);
+        ppp(a, &sb)
+    }
+    pub use ppsp as pvector_plus_scaled_pvector;
+
+    ///  p-vector inner (=scalar=dot) product.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     a      double[3]     first p-vector
+    ///     b      double[3]     second p-vector
+    ///
+    ///  Returned (function value):
+    ///            double        a . b
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    ///
+    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    pub fn pdp(a: &[f64; 3], b: &[f64; 3]) -> f64 {
+        a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
+    }
+    pub use pdp as pvector_dot_product;
+
+    ///  p-vector outer (=vector=cross) product.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     a        double[3]      first p-vector
+    ///     b        double[3]      second p-vector
+    ///
+    ///  Returned:
+    ///     axb      double[3]      a x b
+    ///
+    ///  Note:
+    ///     It is permissible to re-use the same array for any of the
+    ///     arguments.
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    ///
+    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    pub fn pxp(a: &[f64; 3], b: &[f64; 3]) -> [f64; 3] {
+        let xa = a[0];
+        let ya = a[1];
+        let za = a[2];
+        let xb = b[0];
+        let yb = b[1];
+        let zb = b[2];
+        [ya * zb - za * yb, za * xb - xa * zb, xa * yb - ya * xb]
+    }
+    pub use pxp as pvector_cross_product;
+
+    ///  Modulus of p-vector.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     p      double[3]     p-vector
+    ///
+    ///  Returned (function value):
+    ///            double        modulus
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    ///
+    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    pub fn pm(p: &[f64; 3]) -> f64 {
+        (p[0] * p[0] + p[1] * p[1] + p[2] * p[2]).sqrt()
+    }
+    pub use pm as pvector_modulus;
+
+    ///  Convert a p-vector into modulus and unit vector.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     p        double[3]      p-vector
+    ///
+    ///  Returned:
+    ///     r        double         modulus
+    ///     u        double[3]      unit vector
+    ///
+    ///  Notes:
+    ///
+    ///  1) If p is null, the result is null.  Otherwise the result is a unit
+    ///     vector.
+    ///
+    ///  2) It is permissible to re-use the same array for any of the
+    ///     arguments.
+    ///
+    ///  Called:
+    ///     iauPm        modulus of p-vector
+    ///     iauZp        zero p-vector
+    ///     iauSxp       multiply p-vector by scalar
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    ///
+    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    pub fn pn(p: &[f64; 3]) -> (f64, [f64; 3]) {
+        // Obtain the modulus and test for zero.
+        let w = pm(p);
+        if w == 0.0 {
+            // Null vector.
+            let u = zp();
+            (w, u)
+        } else {
+            // Unit vector.
+            let u = sxp(1.0 / w, p);
+            (w, u)
+        }
+    }
+    pub use pn as pvector_normalize;
+
+    ///  Multiply a p-vector by a scalar.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     s      double        scalar
+    ///     p      double[3]     p-vector
+    ///
+    ///  Returned:
+    ///     sp     double[3]     s * p
+    ///
+    ///  Note:
+    ///     It is permissible for p and sp to be the same array.
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    ///
+    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    pub fn sxp(s: f64, p: &[f64; 3]) -> [f64; 3] {
+        [s * p[0], s * p[1], s * p[2]]
+    }
+    pub use sxp as pvector_multiply_scalar;
+
+    #[allow(clippy::excessive_precision)]
+    #[cfg(test)]
+    mod tests {
+        use assert_approx_eq::assert_approx_eq;
+
+        use super::*;
+
+        /// t_sofa.c t_ppp
+        #[test]
+        fn test_ppp() {
+            let a = [2.0, 2.0, 3.0];
+            let b = [1.0, 3.0, 4.0];
+            let apb = ppp(&a, &b);
+            assert_eq!(apb, [3.0, 5.0, 7.0]);
+        }
+
+        /// t_sofa.c t_pmp
+        #[test]
+        fn test_pmp() {
+            let a = [2.0, 2.0, 3.0];
+            let b = [1.0, 3.0, 4.0];
+            let amb = pmp(&a, &b);
+            assert_eq!(amb, [1.0, -1.0, -1.0]);
+        }
+
+        /// t_sofa.c t_ppsp
+        #[test]
+        fn test_ppsp() {
+            let a = [2.0, 2.0, 3.0];
+            let s = 5.0;
+            let b = [1.0, 3.0, 4.0];
+            let apsb = ppsp(&a, s, &b);
+            assert_eq!(apsb, [7.0, 17.0, 23.0]);
+        }
+
+        /// t_sofa.c t_pdp
+        #[test]
+        fn test_pdp() {
+            let a = [2.0, 2.0, 3.0];
+            let b = [1.0, 3.0, 4.0];
+            let apb = pdp(&a, &b);
+            assert_eq!(apb, 20.0);
+        }
+
+        /// t_sofa.c t_pxp
+        #[test]
+        fn test_pxp() {
+            let a = [2.0, 2.0, 3.0];
+            let b = [1.0, 3.0, 4.0];
+            let axb = pxp(&a, &b);
+            assert_eq!(axb, [-1.0, -5.0, 4.0]);
+        }
+
+        /// t_sofa.c t_pm
+        #[test]
+        fn test_pm() {
+            let p = [0.3, 1.2, -2.5];
+            let r = pm(&p);
+            assert_approx_eq!(r, 2.789265136196270604, 1e-12);
+        }
+
+        /// t_sofa.c t_pn
+        #[test]
+        fn test_pn() {
+            let p = [0.3, 1.2, -2.5];
+            let (r, u) = pn(&p);
+            assert_approx_eq!(r, 2.789265136196270604, 1e-12);
+
+            assert_approx_eq!(u[0], 0.1075552109073112058, 1e-12);
+            assert_approx_eq!(u[1], 0.4302208436292448232, 1e-12);
+            assert_approx_eq!(u[2], -0.8962934242275933816, 1e-12);
+        }
+
+        #[test]
+        fn test_pn_zero() {
+            let p = [0.0, 0.0, 0.0];
+            let (r, u) = pn(&p);
+            assert_eq!(r, 0.0);
+            assert_eq!(u, [0.0, 0.0, 0.0]);
+        }
+
+        /// t_sofa.c t_sxp
+        #[test]
+        fn test_sxp() {
+            let s = 2.0;
+            let p = [0.3, 1.2, -2.5];
+            let sp = sxp(s, &p);
+            assert_eq!(sp, [0.6, 2.4, -5.0]);
         }
     }
 }
