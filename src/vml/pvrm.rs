@@ -217,7 +217,7 @@ pub mod rotations {
     ///  SOFA release 2023-10-11
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
-    pub fn rx(phi: f64, r: [[f64; 3]; 3]) -> [[f64; 3]; 3] {
+    pub fn rx(phi: f64, r: &[[f64; 3]; 3]) -> [[f64; 3]; 3] {
         let s = phi.sin();
         let c = phi.cos();
         let a10 = c * r[1][0] + s * r[2][0];
@@ -265,7 +265,7 @@ pub mod rotations {
     ///  SOFA release 2023-10-11
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
-    pub fn ry(theta: f64, r: [[f64; 3]; 3]) -> [[f64; 3]; 3] {
+    pub fn ry(theta: f64, r: &[[f64; 3]; 3]) -> [[f64; 3]; 3] {
         let s = theta.sin();
         let c = theta.cos();
         let a00 = c * r[0][0] - s * r[2][0];
@@ -314,7 +314,7 @@ pub mod rotations {
     ///  SOFA release 2023-10-11
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
-    pub fn rz(psi: f64, r: [[f64; 3]; 3]) -> [[f64; 3]; 3] {
+    pub fn rz(psi: f64, r: &[[f64; 3]; 3]) -> [[f64; 3]; 3] {
         let s = psi.sin();
         let c = psi.cos();
         let a00 = c * r[0][0] + s * r[1][0];
@@ -344,7 +344,7 @@ pub mod rotations {
             //TODO: would be amazing to have a Vec3 type with approx equal trait...
             let phi = 0.3456789;
             let r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
-            let result = rx(phi, r);
+            let result = rx(phi, &r);
             assert_eq!(result[0][0], 2.0);
             assert_eq!(result[0][1], 3.0);
             assert_eq!(result[0][2], 2.0);
@@ -363,7 +363,7 @@ pub mod rotations {
         fn test_ry() {
             let theta = 0.3456789;
             let r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
-            let result = ry(theta, r);
+            let result = ry(theta, &r);
             assert_approx_eq!(result[0][0], 0.8651847818978159930, 1e-12);
             assert_approx_eq!(result[0][1], 1.467194920539316554, 1e-12);
             assert_approx_eq!(result[0][2], 0.1875137911274457342, 1e-12);
@@ -382,7 +382,7 @@ pub mod rotations {
         fn test_rz() {
             let psi = 0.3456789;
             let r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
-            let result = rz(psi, r);
+            let result = rz(psi, &r);
             assert_approx_eq!(result[0][0], 2.898197754208926769, 1e-12);
             assert_approx_eq!(result[0][1], 3.500207892850427330, 1e-12);
             assert_approx_eq!(result[0][2], 2.898197754208926769, 1e-12);
@@ -458,7 +458,7 @@ pub mod sphere_cart_conv {
     ///  SOFA release 2023-10-11
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
-    pub fn c2s(p: [f64; 3]) -> (f64, f64) {
+    pub fn c2s(p: &[f64; 3]) -> (f64, f64) {
         let x = p[0];
         let y = p[1];
         let z = p[2];
@@ -529,9 +529,9 @@ pub mod sphere_cart_conv {
     ///  SOFA release 2023-10-11
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
-    pub fn p2s(p: [f64; 3]) -> (f64, f64, f64) {
+    pub fn p2s(p: &[f64; 3]) -> (f64, f64, f64) {
         let (theta, phi) = c2s(p);
-        let r = pm(&p);
+        let r = pm(p);
         (theta, phi, r)
     }
     pub use p2s as p_vector_to_spherical;
@@ -556,7 +556,7 @@ pub mod sphere_cart_conv {
         #[test]
         fn test_c2s() {
             let p = [100.0, -50.0, 25.0];
-            let (theta, phi) = c2s(p);
+            let (theta, phi) = c2s(&p);
             assert_approx_eq!(theta, -0.4636476090008061162, 1e-14);
             assert_approx_eq!(phi, 0.2199879773954594463, 1e-14);
         }
@@ -574,7 +574,7 @@ pub mod sphere_cart_conv {
         #[test]
         fn test_p2s() {
             let p = [100.0, -50.0, 25.0];
-            let (theta, phi, r) = p2s(p);
+            let (theta, phi, r) = p2s(&p);
             assert_approx_eq!(theta, -0.4636476090008061162, 1e-12);
             assert_approx_eq!(phi, 0.2199879773954594463, 1e-12);
             assert_approx_eq!(r, 114.5643923738960002, 1e-9);
