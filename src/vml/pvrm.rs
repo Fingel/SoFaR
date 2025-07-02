@@ -1171,8 +1171,9 @@ pub mod sep_position_angle {
     use crate::{
         Pvector,
         vml::pvrm::{
+            initialize::zp,
             sphere_cart_conv::s2c,
-            vec_ops::{pdp, pm, pxp},
+            vec_ops::{pdp, pm, pmp, pn, pxp},
         },
     };
 
@@ -1262,6 +1263,134 @@ pub mod sep_position_angle {
     }
     pub use seps as angular_separation_spherical;
 
+    ///  Position-angle from two p-vectors.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     a      double[3]  direction of reference point
+    ///     b      double[3]  direction of point whose PA is required
+    ///
+    ///  Returned (function value):
+    ///            double     position angle of b with respect to a (radians)
+    ///
+    ///  Notes:
+    ///
+    ///  1) The result is the position angle, in radians, of direction b with
+    ///     respect to direction a.  It is in the range -pi to +pi.  The
+    ///     sense is such that if b is a small distance "north" of a the
+    ///     position angle is approximately zero, and if b is a small
+    ///     distance "east" of a the position angle is approximately +pi/2.
+    ///
+    ///  2) The vectors a and b need not be of unit length.
+    ///
+    ///  3) Zero is returned if the two directions are the same or if either
+    ///     vector is null.
+    ///
+    ///  4) If vector a is at a pole, the result is ill-defined.
+    ///
+    ///  Called:
+    ///     iauPn        decompose p-vector into modulus and direction
+    ///     iauPm        modulus of p-vector
+    ///     iauPxp       vector product of two p-vectors
+    ///     iauPmp       p-vector minus p-vector
+    ///     iauPdp       scalar product of two p-vectors
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    ///
+    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    pub fn pap(a: &Pvector, b: &Pvector) -> f64 {
+        let st: f64;
+        let mut ct: f64;
+        let mut eta = zp();
+
+        // Modulus and direction of the a vector.
+        let (am, au) = pn(a);
+
+        // Modulus of the b vector.
+        let bm = pm(b);
+
+        // Deal with the case of a null vector
+        if am == 0.0 || bm == 0.0 {
+            st = 0.0;
+            ct = 1.0;
+        } else {
+            // The "north" axis tangential from a (arbitrary length).
+            let xa = a[0];
+            let ya = a[1];
+            let za = a[2];
+            eta[0] = -xa * za;
+            eta[1] = -ya * za;
+            eta[2] = xa * xa + ya * ya;
+
+            // The "east" axis tangential from a (same length).
+            let xi = pxp(&eta, &au);
+
+            // The vector from a to b.
+            let a2b = pmp(b, a);
+
+            // Resolve into components along the north and east axes.
+            st = pdp(&a2b, &xi);
+            ct = pdp(&a2b, &eta);
+
+            // Deal with degenerate cases
+            if st == 0.0 && ct == 0.0 {
+                ct = 1.0;
+            }
+        }
+
+        // Position angle
+        st.atan2(ct)
+    }
+    pub use pap as postition_angle_from_pvector;
+
+    ///  Position-angle from spherical coordinates.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     al     double     longitude of point A (e.g. RA) in radians
+    ///     ap     double     latitude of point A (e.g. Dec) in radians
+    ///     bl     double     longitude of point B
+    ///     bp     double     latitude of point B
+    ///
+    ///  Returned (function value):
+    ///            double     position angle of B with respect to A
+    ///
+    ///  Notes:
+    ///
+    ///  1) The result is the bearing (position angle), in radians, of point
+    ///     B with respect to point A.  It is in the range -pi to +pi.  The
+    ///     sense is such that if B is a small distance "east" of point A,
+    ///     the bearing is approximately +pi/2.
+    ///
+    ///  2) Zero is returned if the two points are coincident.
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    ///
+    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end
+    pub fn pas(al: f64, ap: f64, bl: f64, bp: f64) -> f64 {
+        let dl = bl - al;
+        let y = dl.sin() * bp.cos();
+        let x = bp.sin() * ap.cos() - bp.cos() * ap.sin() * dl.cos();
+        if x != 0.0 || y != 0.0 {
+            y.atan2(x)
+        } else {
+            0.0
+        }
+    }
+    pub use pas as postition_angle_from_spherical;
+
     #[cfg(test)]
     mod tests {
         use assert_approx_eq::assert_approx_eq;
@@ -1287,6 +1416,27 @@ pub mod sep_position_angle {
             let bp = -3.0;
             let s = seps(al, ap, bl, bp);
             assert_approx_eq!(s, 2.346722016996998842, 1e-14);
+        }
+
+        /// t_sofa.c t_pap
+        #[test]
+        fn test_pap() {
+            let a = [1.0, 0.1, 0.2];
+            let b = [-3.0, 1e-3, 0.2];
+            let theta = pap(&a, &b);
+            assert_approx_eq!(theta, 0.3671514267841113674, 1e-12);
+        }
+
+        /// t_sofa.c t_pas
+        #[test]
+        fn test_pas() {
+            let al = 1.0;
+            let ap = 0.1;
+            let bl = 0.2;
+            let bp = -1.0;
+
+            let theta = pas(al, ap, bl, bp);
+            assert_approx_eq!(theta, -2.724544922932270424, 1e-12);
         }
     }
 }
