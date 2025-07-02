@@ -930,3 +930,116 @@ pub mod vec_ops {
         }
     }
 }
+
+/// Operations on matrices
+///
+/// RXR       r-matrix multiply
+/// TR        transpose r-matrix
+pub mod matrix_ops {
+    use crate::vml::pvrm::initialize::zr;
+
+    // TODO: SIMD
+    ///  Multiply two r-matrices.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     a        double[3][3]    first r-matrix
+    ///     b        double[3][3]    second r-matrix
+    ///
+    ///  Returned:
+    ///     atb      double[3][3]    a * b
+    ///
+    ///  Note:
+    ///     It is permissible to re-use the same array for any of the
+    ///     arguments.
+    ///
+    ///  Called:
+    ///     iauCr        copy r-matrix
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    ///
+    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    #[allow(clippy::needless_range_loop)]
+    pub fn rxr(a: &[[f64; 3]; 3], b: &[[f64; 3]; 3]) -> [[f64; 3]; 3] {
+        //TODO: naive mmultiply implementation
+        let mut atb = zr();
+        let mut w;
+        for i in 0..3 {
+            for j in 0..3 {
+                w = 0.0;
+                for k in 0..3 {
+                    w += a[i][k] * b[k][j];
+                }
+                atb[i][j] = w;
+            }
+        }
+        atb
+    }
+    pub use rxr as rmatrix_mutiply;
+
+    ///  Transpose an r-matrix.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     r        double[3][3]    r-matrix
+    ///
+    ///  Returned:
+    ///     rt       double[3][3]    transpose
+    ///
+    ///  Note:
+    ///     It is permissible for r and rt to be the same array.
+    ///
+    ///  Called:
+    ///     iauCr        copy r-matrix
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    ///
+    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    #[allow(clippy::needless_range_loop)]
+    pub fn tr(r: &[[f64; 3]; 3]) -> [[f64; 3]; 3] {
+        let mut tr = zr();
+        for i in 0..3 {
+            for j in 0..3 {
+                tr[i][j] = r[j][i];
+            }
+        }
+        tr
+    }
+    pub use tr as transpose_rmatrix;
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+
+        /// t_sofa.c t_rxr
+        #[test]
+        fn test_rxr() {
+            let a = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
+            let b = [[1.0, 2.0, 2.0], [4.0, 1.0, 1.0], [3.0, 0.0, 1.0]];
+            let atb = [[20.0, 7.0, 9.0], [20.0, 8.0, 11.0], [34.0, 10.0, 15.0]];
+            let result = rxr(&a, &b);
+            assert_eq!(result, atb);
+        }
+
+        /// t_sofa.c t_tr
+        #[test]
+        fn test_tr() {
+            let r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
+            let rt = [[2.0, 3.0, 3.0], [3.0, 2.0, 4.0], [2.0, 3.0, 5.0]];
+            let result = tr(&r);
+            assert_eq!(result, rt);
+        }
+    }
+}
