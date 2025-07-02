@@ -1440,3 +1440,159 @@ pub mod sep_position_angle {
         }
     }
 }
+
+/// Rotation vectors
+/// - RV2M      r-vector to r-matrix
+/// - RM2V      r-matrix to r-vector
+pub mod rotation_vectors {
+    use crate::{Pvector, Rmatrix, vml::pvrm::initialize::zr};
+    ///  Form the r-matrix corresponding to a given r-vector.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     w        double[3]      rotation vector (Note 1)
+    ///
+    ///  Returned:
+    ///     r        double[3][3]    rotation matrix
+    ///
+    ///  Notes:
+    ///
+    ///  1) A rotation matrix describes a rotation through some angle about
+    ///     some arbitrary axis called the Euler axis.  The "rotation vector"
+    ///     supplied to This function has the same direction as the Euler
+    ///     axis, and its magnitude is the angle in radians.
+    ///
+    ///  2) If w is null, the identity matrix is returned.
+    ///
+    ///  3) The reference frame rotates clockwise as seen looking along the
+    ///     rotation vector from the origin.
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    ///
+    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    pub fn rv2m(w: &Pvector) -> Rmatrix {
+        // Euler angle (magnitude of rotation vector) and functions.
+        let mut x = w[0];
+        let mut y = w[1];
+        let mut z = w[2];
+        let phi = (x * x + y * y + z * z).sqrt();
+        let s = phi.sin();
+        let c = phi.cos();
+        let f = 1.0 - c;
+
+        // Euler axis (direction of rotation vector), perhaps null.
+        if phi > 0.0 {
+            x /= phi;
+            y /= phi;
+            z /= phi;
+        }
+
+        // Form the rotation matrix.
+        let mut r = zr();
+        r[0][0] = x * x * f + c;
+        r[0][1] = x * y * f + z * s;
+        r[0][2] = x * z * f - y * s;
+        r[1][0] = y * x * f - z * s;
+        r[1][1] = y * y * f + c;
+        r[1][2] = y * z * f + x * s;
+        r[2][0] = z * x * f + y * s;
+        r[2][1] = z * y * f - x * s;
+        r[2][2] = z * z * f + c;
+
+        r
+    }
+    pub use rv2m as rvector_to_rmatrix;
+
+    ///  Express an r-matrix as an r-vector.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     r        double[3][3]    rotation matrix
+    ///
+    ///  Returned:
+    ///     w        double[3]       rotation vector (Note 1)
+    ///
+    ///  Notes:
+    ///
+    ///  1) A rotation matrix describes a rotation through some angle about
+    ///     some arbitrary axis called the Euler axis.  The "rotation vector"
+    ///     returned by this function has the same direction as the Euler axis,
+    ///     and its magnitude is the angle in radians.  (The magnitude and
+    ///     direction can be separated by means of the function iauPn.)
+    ///
+    ///  2) If r is null, so is the result.  If r is not a rotation matrix
+    ///     the result is undefined;  r must be proper (i.e. have a positive
+    ///     determinant) and real orthogonal (inverse = transpose).
+    ///
+    ///  3) The reference frame rotates clockwise as seen looking along
+    ///     the rotation vector from the origin.
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    ///
+    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end
+    pub fn rm2v(r: &Rmatrix) -> Pvector {
+        // TODO: Type for Rvector
+        let x = r[1][2] - r[2][1];
+        let y = r[2][0] - r[0][2];
+        let z = r[0][1] - r[1][0];
+        let s2 = (x * x + y * y + z * z).sqrt();
+        if s2 > 0.0 {
+            let c2 = r[0][0] + r[1][1] + r[2][2] - 1.0;
+            let phi = s2.atan2(c2);
+            let f = phi / s2;
+            [x * f, y * f, z * f]
+        } else {
+            [0.0, 0.0, 0.0]
+        }
+    }
+    pub use rm2v as rmatrix_to_rvector;
+
+    #[cfg(test)]
+    mod tests {
+        use assert_approx_eq::assert_approx_eq;
+
+        use super::*;
+
+        /// t_sofa.c t_rv2m
+        #[test]
+        fn test_rv2m() {
+            let w = [0.0, 1.41371669, -1.88495559];
+            let r = rv2m(&w);
+
+            assert_approx_eq!(r[0][0], -0.7071067782221119905, 1e-14);
+            assert_approx_eq!(r[0][1], -0.5656854276809129651, 1e-14);
+            assert_approx_eq!(r[0][2], -0.4242640700104211225, 1e-14);
+
+            assert_approx_eq!(r[1][0], 0.5656854276809129651, 1e-14);
+            assert_approx_eq!(r[1][1], -0.0925483394532274246, 1e-14);
+            assert_approx_eq!(r[1][2], -0.8194112531408833269, 1e-14);
+
+            assert_approx_eq!(r[2][0], 0.4242640700104211225, 1e-14);
+            assert_approx_eq!(r[2][1], -0.8194112531408833269, 1e-14);
+            assert_approx_eq!(r[2][2], 0.3854415612311154341, 1e-14);
+        }
+
+        /// t_sofa.c t_rm2v
+        #[test]
+        fn test_rm2v() {
+            let r = [[0.0, -0.8, -0.6], [0.8, -0.36, 0.48], [0.6, 0.48, -0.64]];
+            let w = rm2v(&r);
+
+            assert_approx_eq!(w[0], 0.0, 1e-12);
+            assert_approx_eq!(w[1], 1.413716694115406957, 1e-12);
+            assert_approx_eq!(w[2], -1.884955592153875943, 1e-12);
+        }
+    }
+}
