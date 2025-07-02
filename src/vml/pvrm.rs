@@ -5,6 +5,8 @@
 ///   - ZR        initialize r-matrix to null
 ///   - IR        initialize r-matrix to identity
 pub mod initialize {
+    use crate::{Pvector, Rmatrix};
+
     ///  Zero a p-vector.
     ///
     ///  This function is part of the International Astronomical Union's
@@ -20,7 +22,7 @@ pub mod initialize {
     ///  SOFA release 2023-10-11
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
-    pub fn zp() -> [f64; 3] {
+    pub fn zp() -> Pvector {
         [0.0, 0.0, 0.0]
     }
     pub use zp as zero_p_vector;
@@ -40,7 +42,7 @@ pub mod initialize {
     ///  SOFA release 2023-10-11
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
-    pub fn zr() -> [[f64; 3]; 3] {
+    pub fn zr() -> Rmatrix {
         [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
     }
     pub use zr as zero_r_matrix;
@@ -60,7 +62,7 @@ pub mod initialize {
     ///  SOFA release 2023-10-11
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
-    pub fn ir() -> [[f64; 3]; 3] {
+    pub fn ir() -> Rmatrix {
         [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
     }
     pub use ir as identity_r_matrix;
@@ -102,6 +104,7 @@ pub mod initialize {
 ///   - CP        copy p-vector
 ///   - CR        copy r-matrix
 pub mod copy {
+    use crate::{Pvector, Rmatrix};
     ///  Copy a p-vector.
     ///
     ///  This function is part of the International Astronomical Union's
@@ -120,7 +123,7 @@ pub mod copy {
     ///  SOFA release 2023-10-11
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
-    pub fn cp(p: &[f64; 3]) -> [f64; 3] {
+    pub fn cp(p: &Pvector) -> Pvector {
         //TODO: This is pointless as arrays implement Copy trait
         [p[0], p[1], p[2]]
     }
@@ -146,7 +149,7 @@ pub mod copy {
     ///  SOFA release 2023-10-11
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
-    pub fn cr(r: &[[f64; 3]; 3]) -> [[f64; 3]; 3] {
+    pub fn cr(r: &Rmatrix) -> Rmatrix {
         //TODO: This is pointless as arrays implement Copy trait
         [
             [r[0][0], r[0][1], r[0][2]],
@@ -184,6 +187,7 @@ pub mod copy {
 /// - RY        rotate r-matrix about y
 /// - RZ        rotate r-matrix about z
 pub mod rotations {
+    use crate::Rmatrix;
 
     ///  Rotate an r-matrix about the x-axis.
     ///
@@ -217,7 +221,7 @@ pub mod rotations {
     ///  SOFA release 2023-10-11
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
-    pub fn rx(phi: f64, r: &[[f64; 3]; 3]) -> [[f64; 3]; 3] {
+    pub fn rx(phi: f64, r: &Rmatrix) -> Rmatrix {
         let s = phi.sin();
         let c = phi.cos();
         let a10 = c * r[1][0] + s * r[2][0];
@@ -265,7 +269,7 @@ pub mod rotations {
     ///  SOFA release 2023-10-11
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
-    pub fn ry(theta: f64, r: &[[f64; 3]; 3]) -> [[f64; 3]; 3] {
+    pub fn ry(theta: f64, r: &Rmatrix) -> Rmatrix {
         let s = theta.sin();
         let c = theta.cos();
         let a00 = c * r[0][0] - s * r[2][0];
@@ -314,7 +318,7 @@ pub mod rotations {
     ///  SOFA release 2023-10-11
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
-    pub fn rz(psi: f64, r: &[[f64; 3]; 3]) -> [[f64; 3]; 3] {
+    pub fn rz(psi: f64, r: &Rmatrix) -> Rmatrix {
         let s = psi.sin();
         let c = psi.cos();
         let a00 = c * r[0][0] + s * r[1][0];
@@ -404,6 +408,7 @@ pub mod rotations {
 /// - S2P       spherical to p-vector
 /// - P2S       p-vector to spherical
 pub mod sphere_cart_conv {
+    use crate::Pvector;
     use crate::vml::pvrm::vec_ops::{pm, sxp};
 
     ///  Convert spherical coordinates to Cartesian.
@@ -425,7 +430,7 @@ pub mod sphere_cart_conv {
     ///  SOFA release 2023-10-11
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
-    pub fn s2c(theta: f64, phi: f64) -> [f64; 3] {
+    pub fn s2c(theta: f64, phi: f64) -> Pvector {
         let cp = phi.cos();
         [theta.cos() * cp, theta.sin() * cp, phi.sin()]
     }
@@ -458,7 +463,7 @@ pub mod sphere_cart_conv {
     ///  SOFA release 2023-10-11
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
-    pub fn c2s(p: &[f64; 3]) -> (f64, f64) {
+    pub fn c2s(p: &Pvector) -> (f64, f64) {
         let x = p[0];
         let y = p[1];
         let z = p[2];
@@ -493,7 +498,7 @@ pub mod sphere_cart_conv {
     ///  SOFA release 2023-10-11
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
-    pub fn s2p(theta: f64, phi: f64, r: f64) -> [f64; 3] {
+    pub fn s2p(theta: f64, phi: f64, r: f64) -> Pvector {
         let u = s2c(theta, phi);
         sxp(r, &u)
     }
@@ -529,7 +534,7 @@ pub mod sphere_cart_conv {
     ///  SOFA release 2023-10-11
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
-    pub fn p2s(p: &[f64; 3]) -> (f64, f64, f64) {
+    pub fn p2s(p: &Pvector) -> (f64, f64, f64) {
         let (theta, phi) = c2s(p);
         let r = pm(p);
         (theta, phi, r)
@@ -592,6 +597,7 @@ pub mod sphere_cart_conv {
 ///- PN        normalize p-vector returning modulus
 ///- SXP       multiply p-vector by scalar
 pub mod vec_ops {
+    use crate::Pvector;
     use crate::vml::pvrm::initialize::zp;
     //TODO: SIMD would probably provide gains for this module
 
@@ -618,7 +624,7 @@ pub mod vec_ops {
     ///  SOFA release 2023-10-11
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
-    pub fn ppp(a: &[f64; 3], b: &[f64; 3]) -> [f64; 3] {
+    pub fn ppp(a: &Pvector, b: &Pvector) -> Pvector {
         [a[0] + b[0], a[1] + b[1], a[2] + b[2]]
     }
     pub use ppp as pvector_plus_pvector;
@@ -646,7 +652,7 @@ pub mod vec_ops {
     ///  SOFA release 2023-10-11
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
-    pub fn pmp(a: &[f64; 3], b: &[f64; 3]) -> [f64; 3] {
+    pub fn pmp(a: &Pvector, b: &Pvector) -> Pvector {
         [a[0] - b[0], a[1] - b[1], a[2] - b[2]]
     }
     pub use pmp as pvector_minus_pvector;
@@ -678,7 +684,7 @@ pub mod vec_ops {
     ///  SOFA release 2023-10-11
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end
-    pub fn ppsp(a: &[f64; 3], s: f64, b: &[f64; 3]) -> [f64; 3] {
+    pub fn ppsp(a: &Pvector, s: f64, b: &Pvector) -> Pvector {
         let sb = sxp(s, b);
         ppp(a, &sb)
     }
@@ -703,7 +709,7 @@ pub mod vec_ops {
     ///  SOFA release 2023-10-11
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
-    pub fn pdp(a: &[f64; 3], b: &[f64; 3]) -> f64 {
+    pub fn pdp(a: &Pvector, b: &Pvector) -> f64 {
         a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
     }
     pub use pdp as pvector_dot_product;
@@ -731,7 +737,7 @@ pub mod vec_ops {
     ///  SOFA release 2023-10-11
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
-    pub fn pxp(a: &[f64; 3], b: &[f64; 3]) -> [f64; 3] {
+    pub fn pxp(a: &Pvector, b: &Pvector) -> Pvector {
         let xa = a[0];
         let ya = a[1];
         let za = a[2];
@@ -760,7 +766,7 @@ pub mod vec_ops {
     ///  SOFA release 2023-10-11
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
-    pub fn pm(p: &[f64; 3]) -> f64 {
+    pub fn pm(p: &Pvector) -> f64 {
         (p[0] * p[0] + p[1] * p[1] + p[2] * p[2]).sqrt()
     }
     pub use pm as pvector_modulus;
@@ -797,7 +803,7 @@ pub mod vec_ops {
     ///  SOFA release 2023-10-11
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
-    pub fn pn(p: &[f64; 3]) -> (f64, [f64; 3]) {
+    pub fn pn(p: &Pvector) -> (f64, Pvector) {
         // Obtain the modulus and test for zero.
         let w = pm(p);
         if w == 0.0 {
@@ -834,7 +840,7 @@ pub mod vec_ops {
     ///  SOFA release 2023-10-11
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
-    pub fn sxp(s: f64, p: &[f64; 3]) -> [f64; 3] {
+    pub fn sxp(s: f64, p: &Pvector) -> Pvector {
         [s * p[0], s * p[1], s * p[2]]
     }
     pub use sxp as pvector_multiply_scalar;
@@ -936,6 +942,7 @@ pub mod vec_ops {
 /// RXR       r-matrix multiply
 /// TR        transpose r-matrix
 pub mod matrix_ops {
+    use crate::Rmatrix;
     use crate::vml::pvrm::initialize::zr;
 
     // TODO: SIMD
@@ -966,7 +973,7 @@ pub mod matrix_ops {
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
     #[allow(clippy::needless_range_loop)]
-    pub fn rxr(a: &[[f64; 3]; 3], b: &[[f64; 3]; 3]) -> [[f64; 3]; 3] {
+    pub fn rxr(a: &Rmatrix, b: &Rmatrix) -> Rmatrix {
         //TODO: naive mmultiply implementation
         let mut atb = zr();
         let mut w;
@@ -1008,7 +1015,7 @@ pub mod matrix_ops {
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
     #[allow(clippy::needless_range_loop)]
-    pub fn tr(r: &[[f64; 3]; 3]) -> [[f64; 3]; 3] {
+    pub fn tr(r: &Rmatrix) -> Rmatrix {
         let mut tr = zr();
         for i in 0..3 {
             for j in 0..3 {

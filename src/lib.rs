@@ -1,6 +1,18 @@
 pub mod constants;
 pub mod vml;
 
+// Type aliases to reduce finger strain
+///"Position" or "p" vectors (or just plain 3-vectors) have dimension
+///(3) in Fortran and [3] in C.
+type Pvector = [f64; 3];
+
+///"Rotation" or "r" matrices have dimensions (3,3) in Fortran and [3][3]
+///in C.  When used for rotation, they are "orthogonal";  the inverse of
+///such a matrix is equal to the transpose.  Most of the routines in
+///this library do not assume that r-matrices are necessarily orthogonal
+///and in fact work on any 3x3 matrix.
+type Rmatrix = [[f64; 3]; 3];
+
 //TODO: Remove this in favor of round() as it compiles down to
 // a single instruction on x86_64: ROUNDSD
 /// Round to nearest whole number (double)
