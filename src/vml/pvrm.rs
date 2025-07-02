@@ -1050,3 +1050,117 @@ pub mod matrix_ops {
         }
     }
 }
+
+/// Matrix-vector products
+/// - RXP       product of r-matrix and p-vector
+/// - TRXP      product of transpose of r-matrix and p-vector
+pub mod matrix_vec_products {
+    use crate::vml::pvrm::initialize::zp;
+    use crate::vml::pvrm::matrix_ops::tr;
+    use crate::{Pvector, Rmatrix};
+
+    ///  Multiply a p-vector by an r-matrix.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     r        double[3][3]    r-matrix
+    ///     p        double[3]       p-vector
+    ///
+    ///  Returned:
+    ///     rp       double[3]       r * p
+    ///
+    ///  Note:
+    ///     It is permissible for p and rp to be the same array.
+    ///
+    ///  Called:
+    ///     iauCp        copy p-vector
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    ///
+    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    #[allow(clippy::needless_range_loop)]
+    pub fn rxp(r: &Rmatrix, p: &Pvector) -> Pvector {
+        //TODO No need for mut here
+        let mut w;
+        let mut rp = zp();
+        for j in 0..3 {
+            w = 0.0;
+            for i in 0..3 {
+                w += r[j][i] * p[i];
+            }
+            rp[j] = w;
+        }
+        rp
+    }
+    pub use rxp as rmatrix_pvector_product;
+
+    ///  Multiply a p-vector by the transpose of an r-matrix.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     r        double[3][3]   r-matrix
+    ///     p        double[3]      p-vector
+    ///
+    ///  Returned:
+    ///     trp      double[3]      r^T * p
+    ///
+    ///  Note:
+    ///     It is permissible for p and trp to be the same array.
+    ///
+    ///  Called:
+    ///     iauTr        transpose r-matrix
+    ///     iauRxp       product of r-matrix and p-vector
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    ///
+    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    pub fn trxp(r: &Rmatrix, p: &Pvector) -> Pvector {
+        // Transpose of matrix r.
+        let transpose = tr(r);
+
+        // Matrix tr * vector p -> vector trp
+        rxp(&transpose, p)
+    }
+    pub use trxp as transpose_rmatrix_pvector_product;
+
+    #[cfg(test)]
+    mod tests {
+        use assert_approx_eq::assert_approx_eq;
+
+        use super::*;
+
+        /// t_sofa.c t_rxp
+        #[test]
+        fn test_rxp() {
+            let r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
+            let p = [0.2, 1.5, 0.1];
+            let r = rxp(&r, &p);
+            assert_approx_eq!(r[0], 5.1, 1e-12);
+            assert_approx_eq!(r[1], 3.9, 1e-12);
+            assert_approx_eq!(r[2], 7.1, 1e-12);
+        }
+
+        /// t_sofa.c t_trxp
+        #[test]
+        fn test_trxp() {
+            let r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
+            let p = [0.2, 1.5, 0.1];
+            let trp = trxp(&r, &p);
+            assert_approx_eq!(trp[0], 5.2, 1e-12);
+            assert_approx_eq!(trp[1], 4.0, 1e-12);
+            assert_approx_eq!(trp[2], 5.4, 1e-12);
+        }
+    }
+}
