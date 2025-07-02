@@ -335,7 +335,6 @@ pub mod rotations {
         ]
     }
 
-    #[allow(clippy::excessive_precision)]
     #[cfg(test)]
     mod tests {
         use assert_approx_eq::assert_approx_eq;
@@ -541,7 +540,6 @@ pub mod sphere_cart_conv {
     }
     pub use p2s as p_vector_to_spherical;
 
-    #[allow(clippy::excessive_precision)]
     #[cfg(test)]
     mod tests {
         use assert_approx_eq::assert_approx_eq;
@@ -845,7 +843,6 @@ pub mod vec_ops {
     }
     pub use sxp as pvector_multiply_scalar;
 
-    #[allow(clippy::excessive_precision)]
     #[cfg(test)]
     mod tests {
         use assert_approx_eq::assert_approx_eq;
@@ -1265,7 +1262,6 @@ pub mod sep_position_angle {
     }
     pub use seps as angular_separation_spherical;
 
-    #[allow(clippy::excessive_precision)]
     #[cfg(test)]
     mod tests {
         use assert_approx_eq::assert_approx_eq;

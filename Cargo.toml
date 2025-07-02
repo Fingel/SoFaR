@@ -7,3 +7,6 @@ edition = "2024"
 
 [dev-dependencies]
 assert_approx_eq = "1.1.0"
+
+[lints.clippy]
+excessive_precision = "allow"
