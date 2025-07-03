@@ -1026,6 +1026,7 @@ pub mod matrix_ops {
     #[cfg(test)]
     mod tests {
         use super::*;
+        use crate::vml::pvrm::initialize::zr;
 
         /// t_sofa.c t_rxr
         #[test]
@@ -1037,6 +1038,19 @@ pub mod matrix_ops {
             assert_eq!(result, atb);
         }
 
+        #[test]
+        fn test_rxr_parity() {
+            use rsofa::iauRxr;
+            let mut a = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
+            let mut b = [[1.0, 2.0, 2.0], [4.0, 1.0, 1.0], [3.0, 0.0, 1.0]];
+            let atb = rxr(&a, &b);
+            let mut atb_iau = zr();
+            unsafe {
+                iauRxr(a.as_mut_ptr(), b.as_mut_ptr(), atb_iau.as_mut_ptr());
+            }
+            assert_eq!(atb, atb_iau);
+        }
+
         /// t_sofa.c t_tr
         #[test]
         fn test_tr() {
@@ -1044,6 +1058,19 @@ pub mod matrix_ops {
             let rt = [[2.0, 3.0, 3.0], [3.0, 2.0, 4.0], [2.0, 3.0, 5.0]];
             let result = tr(&r);
             assert_eq!(result, rt);
+        }
+
+        #[test]
+        fn test_tr_parity() {
+            use rsofa::iauTr;
+            let mut r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
+            // let rt = [[2.0, 3.0, 3.0], [3.0, 2.0, 4.0], [2.0, 3.0, 5.0]];
+            let rt = tr(&r);
+            let mut rt_iau = zr();
+            unsafe {
+                iauTr(r.as_mut_ptr(), rt_iau.as_mut_ptr());
+            }
+            assert_eq!(rt, rt_iau);
         }
     }
 }
@@ -1143,10 +1170,24 @@ pub mod matrix_vec_products {
         fn test_rxp() {
             let r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
             let p = [0.2, 1.5, 0.1];
-            let r = rxp(&r, &p);
-            assert_approx_eq!(r[0], 5.1, 1e-12);
-            assert_approx_eq!(r[1], 3.9, 1e-12);
-            assert_approx_eq!(r[2], 7.1, 1e-12);
+            let rp = rxp(&r, &p);
+            assert_approx_eq!(rp[0], 5.1, 1e-12);
+            assert_approx_eq!(rp[1], 3.9, 1e-12);
+            assert_approx_eq!(rp[2], 7.1, 1e-12);
+        }
+
+        #[test]
+        fn test_rxp_parity() {
+            use rsofa::iauRxp;
+            let mut r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
+            let mut p = [0.2, 1.5, 0.1];
+            let rp = rxp(&r, &p);
+
+            let mut rp_iau = zp();
+            unsafe {
+                iauRxp(r.as_mut_ptr(), p.as_mut_ptr(), rp_iau.as_mut_ptr());
+            }
+            assert_eq!(rp, rp_iau);
         }
 
         /// t_sofa.c t_trxp
@@ -1158,6 +1199,19 @@ pub mod matrix_vec_products {
             assert_approx_eq!(trp[0], 5.2, 1e-12);
             assert_approx_eq!(trp[1], 4.0, 1e-12);
             assert_approx_eq!(trp[2], 5.4, 1e-12);
+        }
+
+        #[test]
+        fn test_trxp_parity() {
+            use rsofa::iauTrxp;
+            let mut r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
+            let mut p = [0.2, 1.5, 0.1];
+            let trp = trxp(&r, &p);
+            let mut trp_iau = zp();
+            unsafe {
+                iauTrxp(r.as_mut_ptr(), p.as_mut_ptr(), trp_iau.as_mut_ptr());
+            }
+            assert_eq!(trp, trp_iau);
         }
     }
 }
@@ -1406,6 +1460,18 @@ pub mod sep_position_angle {
             assert_approx_eq!(s, 2.860391919024660768, 1e-12);
         }
 
+        #[test]
+        fn test_sepp_parity() {
+            use rsofa::iauSepp;
+            let mut a = [1.0, 0.1, 0.2];
+            let mut b = [-3.0, 1e-3, 0.2];
+            let s = sepp(&a, &b);
+            unsafe {
+                let s_iau = iauSepp(a.as_mut_ptr(), b.as_mut_ptr());
+                assert_eq!(s, s_iau);
+            }
+        }
+
         /// t_sofa.c t_seps
         #[test]
         fn test_seps() {
@@ -1418,6 +1484,21 @@ pub mod sep_position_angle {
             assert_approx_eq!(s, 2.346722016996998842, 1e-14);
         }
 
+        #[test]
+        fn test_seps_parity() {
+            use rsofa::iauSeps;
+            let al = 1.0;
+            let ap = 0.1;
+
+            let bl = 0.2;
+            let bp = -3.0;
+            let s = seps(al, ap, bl, bp);
+            unsafe {
+                let s_iau = iauSeps(al, ap, bl, bp);
+                assert_eq!(s, s_iau);
+            }
+        }
+
         /// t_sofa.c t_pap
         #[test]
         fn test_pap() {
@@ -1425,6 +1506,18 @@ pub mod sep_position_angle {
             let b = [-3.0, 1e-3, 0.2];
             let theta = pap(&a, &b);
             assert_approx_eq!(theta, 0.3671514267841113674, 1e-12);
+        }
+
+        #[test]
+        fn test_pap_parity() {
+            use rsofa::iauPap;
+            let mut a = [1.0, 0.1, 0.2];
+            let mut b = [-3.0, 1e-3, 0.2];
+            let theta = pap(&a, &b);
+            unsafe {
+                let theta_iau = iauPap(a.as_mut_ptr(), b.as_mut_ptr());
+                assert_eq!(theta, theta_iau);
+            }
         }
 
         /// t_sofa.c t_pas
@@ -1437,6 +1530,21 @@ pub mod sep_position_angle {
 
             let theta = pas(al, ap, bl, bp);
             assert_approx_eq!(theta, -2.724544922932270424, 1e-12);
+        }
+
+        #[test]
+        fn test_pas_parity() {
+            use rsofa::iauPas;
+            let al = 1.0;
+            let ap = 0.1;
+            let bl = 0.2;
+            let bp = -1.0;
+
+            let theta = pas(al, ap, bl, bp);
+            unsafe {
+                let theta_iau = iauPas(al, ap, bl, bp);
+                assert_eq!(theta, theta_iau);
+            }
         }
     }
 }
@@ -1584,6 +1692,19 @@ pub mod rotation_vectors {
             assert_approx_eq!(r[2][2], 0.3854415612311154341, 1e-14);
         }
 
+        #[test]
+        fn test_rv2m_parity() {
+            use rsofa::iauRv2m;
+            let mut w = [0.0, 1.41371669, -1.88495559];
+            let r = rv2m(&w);
+
+            let mut iau_r = zr();
+            unsafe {
+                iauRv2m(w.as_mut_ptr(), iau_r.as_mut_ptr());
+            }
+            assert_eq!(r, iau_r);
+        }
+
         /// t_sofa.c t_rm2v
         #[test]
         fn test_rm2v() {
@@ -1593,6 +1714,20 @@ pub mod rotation_vectors {
             assert_approx_eq!(w[0], 0.0, 1e-12);
             assert_approx_eq!(w[1], 1.413716694115406957, 1e-12);
             assert_approx_eq!(w[2], -1.884955592153875943, 1e-12);
+        }
+
+        #[test]
+        fn test_rm2v_parity() {
+            use rsofa::iauRm2v;
+
+            let mut r = [[0.0, -0.8, -0.6], [0.8, -0.36, 0.48], [0.6, 0.48, -0.64]];
+            let w = rm2v(&r);
+
+            let mut w_iau = [0.0, 0.0, 0.0];
+            unsafe {
+                iauRm2v(r.as_mut_ptr(), w_iau.as_mut_ptr());
+            }
+            assert_eq!(w, w_iau);
         }
     }
 }
