@@ -16,7 +16,8 @@ pub mod initialize {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     pub fn zp() -> Pvector {
         [0.0, 0.0, 0.0]
     }
@@ -31,7 +32,8 @@ pub mod initialize {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     pub fn zr() -> Rmatrix {
         [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
     }
@@ -46,7 +48,8 @@ pub mod initialize {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     pub fn ir() -> Rmatrix {
         [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
     }
@@ -102,7 +105,8 @@ pub mod copy {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     pub fn cp(p: &Pvector) -> Pvector {
         //TODO: This is pointless as arrays implement Copy trait
         [p[0], p[1], p[2]]
@@ -123,7 +127,8 @@ pub mod copy {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     pub fn cr(r: &Rmatrix) -> Rmatrix {
         //TODO: This is pointless as arrays implement Copy trait
         [
@@ -190,7 +195,8 @@ pub mod rotations {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     pub fn rx(phi: f64, r: &Rmatrix) -> Rmatrix {
         let s = phi.sin();
         let c = phi.cos();
@@ -233,7 +239,8 @@ pub mod rotations {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     pub fn ry(theta: f64, r: &Rmatrix) -> Rmatrix {
         let s = theta.sin();
         let c = theta.cos();
@@ -277,7 +284,8 @@ pub mod rotations {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     pub fn rz(psi: f64, r: &Rmatrix) -> Rmatrix {
         let s = psi.sin();
         let c = psi.cos();
@@ -383,7 +391,8 @@ pub mod sphere_cart_conv {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     pub fn s2c(theta: f64, phi: f64) -> Pvector {
         let cp = phi.cos();
         [theta.cos() * cp, theta.sin() * cp, phi.sin()]
@@ -411,7 +420,8 @@ pub mod sphere_cart_conv {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     pub fn c2s(p: &Pvector) -> (f64, f64) {
         let x = p[0];
         let y = p[1];
@@ -441,7 +451,8 @@ pub mod sphere_cart_conv {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     pub fn s2p(theta: f64, phi: f64, r: f64) -> Pvector {
         let u = s2c(theta, phi);
         sxp(r, &u)
@@ -472,7 +483,8 @@ pub mod sphere_cart_conv {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     pub fn p2s(p: &Pvector) -> (f64, f64, f64) {
         let (theta, phi) = c2s(p);
         let r = pm(p);
@@ -556,7 +568,8 @@ pub mod vec_ops {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     pub fn ppp(a: &Pvector, b: &Pvector) -> Pvector {
         [a[0] + b[0], a[1] + b[1], a[2] + b[2]]
     }
@@ -579,7 +592,8 @@ pub mod vec_ops {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     pub fn pmp(a: &Pvector, b: &Pvector) -> Pvector {
         [a[0] - b[0], a[1] - b[1], a[2] - b[2]]
     }
@@ -606,7 +620,8 @@ pub mod vec_ops {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     pub fn ppsp(a: &Pvector, s: f64, b: &Pvector) -> Pvector {
         let sb = sxp(s, b);
         ppp(a, &sb)
@@ -626,7 +641,8 @@ pub mod vec_ops {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     pub fn pdp(a: &Pvector, b: &Pvector) -> f64 {
         a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
     }
@@ -649,7 +665,8 @@ pub mod vec_ops {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     pub fn pxp(a: &Pvector, b: &Pvector) -> Pvector {
         let xa = a[0];
         let ya = a[1];
@@ -673,7 +690,8 @@ pub mod vec_ops {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     pub fn pm(p: &Pvector) -> f64 {
         (p[0] * p[0] + p[1] * p[1] + p[2] * p[2]).sqrt()
     }
@@ -705,7 +723,8 @@ pub mod vec_ops {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     pub fn pn(p: &Pvector) -> (f64, Pvector) {
         // Obtain the modulus and test for zero.
         let w = pm(p);
@@ -737,7 +756,8 @@ pub mod vec_ops {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     pub fn sxp(s: f64, p: &Pvector) -> Pvector {
         [s * p[0], s * p[1], s * p[2]]
     }
@@ -863,7 +883,8 @@ pub mod matrix_ops {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     #[allow(clippy::needless_range_loop)]
     pub fn rxr(a: &Rmatrix, b: &Rmatrix) -> Rmatrix {
         //TODO: naive mmultiply implementation
@@ -900,7 +921,8 @@ pub mod matrix_ops {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     #[allow(clippy::needless_range_loop)]
     pub fn tr(r: &Rmatrix) -> Rmatrix {
         let mut tr = zr();
@@ -992,7 +1014,8 @@ pub mod matrix_vec_products {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     #[allow(clippy::needless_range_loop)]
     pub fn rxp(r: &Rmatrix, p: &Pvector) -> Pvector {
         //TODO No need for mut here
@@ -1029,7 +1052,8 @@ pub mod matrix_vec_products {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     pub fn trxp(r: &Rmatrix, p: &Pvector) -> Pvector {
         // Transpose of matrix r.
         let transpose = tr(r);
@@ -1139,7 +1163,8 @@ pub mod sep_position_angle {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     pub fn sepp(a: &Pvector, b: &Pvector) -> f64 {
         // Sine of angle between the vectors, multiplied by the two moduli.
         let axb = pxp(a, b);
@@ -1176,7 +1201,8 @@ pub mod sep_position_angle {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     pub fn seps(al: f64, ap: f64, bl: f64, bp: f64) -> f64 {
         // Spherical to Cartesian.
         let ac = s2c(al, ap);
@@ -1222,7 +1248,8 @@ pub mod sep_position_angle {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     pub fn pap(a: &Pvector, b: &Pvector) -> f64 {
         let st: f64;
         let mut ct: f64;
@@ -1292,7 +1319,8 @@ pub mod sep_position_angle {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     pub fn pas(al: f64, ap: f64, bl: f64, bp: f64) -> f64 {
         let dl = bl - al;
         let y = dl.sin() * bp.cos();
@@ -1438,7 +1466,8 @@ pub mod rotation_vectors {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     pub fn rv2m(w: &Pvector) -> Rmatrix {
         // Euler angle (magnitude of rotation vector) and functions.
         let mut x = w[0];
@@ -1499,7 +1528,8 @@ pub mod rotation_vectors {
     ///
     ///  SOFA release 2023-10-11
     ///
-    ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end
+    /// Derived from the SOFA library. See IAU SOFA terms and conditions
+    /// at https://www.iausofa.org/tandc.html
     pub fn rm2v(r: &Rmatrix) -> Pvector {
         // TODO: Type for Rvector
         let x = r[1][2] - r[2][1];
