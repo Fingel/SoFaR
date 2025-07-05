@@ -1,9 +1,9 @@
 //! Operations involving p-vectors and r-matrices
 
 ///   Initialize
-///   - ZP        zero p-vector
-///   - ZR        initialize r-matrix to null
-///   - IR        initialize r-matrix to identity
+///   - zero_p_vector (ZP)        zero p-vector
+///   - zero_r_matrix (ZR)        initialize r-matrix to null
+///   - identity_r_matrix (IR)        initialize r-matrix to identity
 pub mod initialize {
     use crate::{Pvector, Rmatrix};
 
@@ -18,10 +18,9 @@ pub mod initialize {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn zp() -> Pvector {
+    pub fn zero_p_vector() -> Pvector {
         [0.0, 0.0, 0.0]
     }
-    pub use zp as zero_p_vector;
 
     ///  Initialize an r-matrix to the null matrix.
     ///
@@ -34,10 +33,9 @@ pub mod initialize {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn zr() -> Rmatrix {
+    pub fn zero_r_matrix() -> Rmatrix {
         [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
     }
-    pub use zr as zero_r_matrix;
 
     ///  Initialize an r-matrix to the identity matrix.
     ///
@@ -50,10 +48,9 @@ pub mod initialize {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn ir() -> Rmatrix {
+    pub fn identity_r_matrix() -> Rmatrix {
         [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
     }
-    pub use ir as identity_r_matrix;
 
     #[cfg(test)]
     mod tests {
@@ -64,7 +61,7 @@ pub mod initialize {
         #[allow(unused_assignments)]
         fn test_zp() {
             let mut p = [0.3, 1.2, -2.5];
-            p = zp();
+            p = zero_p_vector();
             assert_eq!(p, [0.0, 0.0, 0.0]);
         }
 
@@ -73,7 +70,7 @@ pub mod initialize {
         #[allow(unused_assignments)]
         fn test_zr() {
             let mut r = [[2.0, 3.0, 3.0], [3.0, 2.0, 4.0], [2.0, 3.0, 5.0]];
-            r = zr();
+            r = zero_r_matrix();
             assert_eq!(r, [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]);
         }
 
@@ -82,15 +79,15 @@ pub mod initialize {
         #[allow(unused_assignments)]
         fn test_ir() {
             let mut r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
-            r = ir();
+            r = identity_r_matrix();
             assert_eq!(r, [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]);
         }
     }
 }
 
 ///   Copy
-///   - CP        copy p-vector
-///   - CR        copy r-matrix
+///   - cp (CP)        copy p-vector
+///   - cr (CR)        copy r-matrix
 pub mod copy {
     use crate::{Pvector, Rmatrix};
     ///  Copy a p-vector.
@@ -163,9 +160,9 @@ pub mod copy {
 }
 
 ///  Build rotations
-/// - RX        rotate r-matrix about x
-/// - RY        rotate r-matrix about y
-/// - RZ        rotate r-matrix about z
+/// - rotate_rmatrix_about_x (RX)        rotate r-matrix about x
+/// - rotate_rmatrix_about_y (RY)        rotate r-matrix about y
+/// - rotate_rmatrix_about_z (RZ)        rotate r-matrix about z
 pub mod rotations {
     use crate::Rmatrix;
 
@@ -197,7 +194,7 @@ pub mod rotations {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn rx(phi: f64, r: &Rmatrix) -> Rmatrix {
+    pub fn rotate_rmatrix_about_x(phi: f64, r: &Rmatrix) -> Rmatrix {
         let s = phi.sin();
         let c = phi.cos();
         let a10 = c * r[1][0] + s * r[2][0];
@@ -241,7 +238,7 @@ pub mod rotations {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn ry(theta: f64, r: &Rmatrix) -> Rmatrix {
+    pub fn rotate_rmatrix_about_y(theta: f64, r: &Rmatrix) -> Rmatrix {
         let s = theta.sin();
         let c = theta.cos();
         let a00 = c * r[0][0] - s * r[2][0];
@@ -286,7 +283,7 @@ pub mod rotations {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn rz(psi: f64, r: &Rmatrix) -> Rmatrix {
+    pub fn rotate_rmatrix_about_z(psi: f64, r: &Rmatrix) -> Rmatrix {
         let s = psi.sin();
         let c = psi.cos();
         let a00 = c * r[0][0] + s * r[1][0];
@@ -315,7 +312,7 @@ pub mod rotations {
             //TODO: would be amazing to have a Vec3 type with approx equal trait...
             let phi = 0.3456789;
             let r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
-            let result = rx(phi, &r);
+            let result = rotate_rmatrix_about_x(phi, &r);
             assert_eq!(result[0][0], 2.0);
             assert_eq!(result[0][1], 3.0);
             assert_eq!(result[0][2], 2.0);
@@ -334,7 +331,7 @@ pub mod rotations {
         fn test_ry() {
             let theta = 0.3456789;
             let r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
-            let result = ry(theta, &r);
+            let result = rotate_rmatrix_about_y(theta, &r);
             assert_approx_eq!(result[0][0], 0.8651847818978159930, 1e-12);
             assert_approx_eq!(result[0][1], 1.467194920539316554, 1e-12);
             assert_approx_eq!(result[0][2], 0.1875137911274457342, 1e-12);
@@ -353,7 +350,7 @@ pub mod rotations {
         fn test_rz() {
             let psi = 0.3456789;
             let r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
-            let result = rz(psi, &r);
+            let result = rotate_rmatrix_about_z(psi, &r);
             assert_approx_eq!(result[0][0], 2.898197754208926769, 1e-12);
             assert_approx_eq!(result[0][1], 3.500207892850427330, 1e-12);
             assert_approx_eq!(result[0][2], 2.898197754208926769, 1e-12);
@@ -370,13 +367,13 @@ pub mod rotations {
 }
 
 /// Spherical/Cartesian conversions
-/// - S2C       spherical to unit vector
-/// - C2S       unit vector to spherical
-/// - S2P       spherical to p-vector
-/// - P2S       p-vector to spherical
+/// - spherical_to_unit_vector (S2C)       spherical to unit vector
+/// - unit_vector_to_spherical (C2S)       unit vector to spherical
+/// - spherical_to_p_vector (S2P)       spherical to p-vector
+/// - p_vector_to_spherical (P2S)       p-vector to spherical
 pub mod sphere_cart_conv {
     use crate::Pvector;
-    use crate::vml::pvrm::vec_ops::{pm, sxp};
+    use crate::vml::pvrm::vec_ops::{pvector_modulus, pvector_multiply_scalar};
 
     ///  Convert spherical coordinates to Cartesian.
     ///
@@ -393,11 +390,10 @@ pub mod sphere_cart_conv {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn s2c(theta: f64, phi: f64) -> Pvector {
+    pub fn spherical_to_unit_vector(theta: f64, phi: f64) -> Pvector {
         let cp = phi.cos();
         [theta.cos() * cp, theta.sin() * cp, phi.sin()]
     }
-    pub use s2c as spherical_to_unit_vector;
 
     ///  P-vector to spherical coordinates.
     ///
@@ -422,7 +418,7 @@ pub mod sphere_cart_conv {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn c2s(p: &Pvector) -> (f64, f64) {
+    pub fn unit_vector_to_spherical(p: &Pvector) -> (f64, f64) {
         let x = p[0];
         let y = p[1];
         let z = p[2];
@@ -431,7 +427,6 @@ pub mod sphere_cart_conv {
         let phi = if z == 0.0 { 0.0 } else { z.atan2(d2.sqrt()) };
         (theta, phi)
     }
-    pub use c2s as unit_vector_to_spherical;
 
     ///  Convert spherical polar coordinates to p-vector.
     ///
@@ -453,11 +448,10 @@ pub mod sphere_cart_conv {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn s2p(theta: f64, phi: f64, r: f64) -> Pvector {
-        let u = s2c(theta, phi);
-        sxp(r, &u)
+    pub fn spherical_to_p_vector(theta: f64, phi: f64, r: f64) -> Pvector {
+        let u = spherical_to_unit_vector(theta, phi);
+        pvector_multiply_scalar(r, &u)
     }
-    pub use s2p as spherical_to_p_vector;
 
     ///  P-vector to spherical polar coordinates.
     ///
@@ -485,12 +479,11 @@ pub mod sphere_cart_conv {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn p2s(p: &Pvector) -> (f64, f64, f64) {
-        let (theta, phi) = c2s(p);
-        let r = pm(p);
+    pub fn p_vector_to_spherical(p: &Pvector) -> (f64, f64, f64) {
+        let (theta, phi) = unit_vector_to_spherical(p);
+        let r = pvector_modulus(p);
         (theta, phi, r)
     }
-    pub use p2s as p_vector_to_spherical;
 
     #[cfg(test)]
     mod tests {
@@ -501,7 +494,7 @@ pub mod sphere_cart_conv {
         /// t_sofa.c t_s2c
         #[test]
         fn test_s2c() {
-            let c = s2c(3.0123, -0.999);
+            let c = spherical_to_unit_vector(3.0123, -0.999);
             assert_approx_eq!(c[0], -0.5366267667260523906, 1e-12);
             assert_approx_eq!(c[1], 0.0697711109765145365, 1e-12);
             assert_approx_eq!(c[2], -0.8409302618566214041, 1e-12);
@@ -511,7 +504,7 @@ pub mod sphere_cart_conv {
         #[test]
         fn test_c2s() {
             let p = [100.0, -50.0, 25.0];
-            let (theta, phi) = c2s(&p);
+            let (theta, phi) = unit_vector_to_spherical(&p);
             assert_approx_eq!(theta, -0.4636476090008061162, 1e-14);
             assert_approx_eq!(phi, 0.2199879773954594463, 1e-14);
         }
@@ -519,7 +512,7 @@ pub mod sphere_cart_conv {
         /// t_sofa.c t_s2p
         #[test]
         fn test_s2p() {
-            let p = s2p(-3.21, 0.123, 0.456);
+            let p = spherical_to_p_vector(-3.21, 0.123, 0.456);
             assert_approx_eq!(p[0], -0.4514964673880165228, 1e-12);
             assert_approx_eq!(p[1], 0.0309339427734258688, 1e-12);
             assert_approx_eq!(p[2], 0.0559466810510877933, 1e-12);
@@ -529,7 +522,7 @@ pub mod sphere_cart_conv {
         #[test]
         fn test_p2s() {
             let p = [100.0, -50.0, 25.0];
-            let (theta, phi, r) = p2s(&p);
+            let (theta, phi, r) = p_vector_to_spherical(&p);
             assert_approx_eq!(theta, -0.4636476090008061162, 1e-12);
             assert_approx_eq!(phi, 0.2199879773954594463, 1e-12);
             assert_approx_eq!(r, 114.5643923738960002, 1e-9);
@@ -538,17 +531,17 @@ pub mod sphere_cart_conv {
 }
 
 ///Operations on vectors
-///- PPP       p-vector plus p-vector
-///- PMP       p-vector minus p-vector
-///- PPSP      p-vector plus scaled p-vector
-///- PDP       inner (=scalar=dot) product of two p-vectors
-///- PXP       outer (=vector=cross) product of two p-vectors
-///- PM        modulus of p-vector
-///- PN        normalize p-vector returning modulus
-///- SXP       multiply p-vector by scalar
+///- pvector_plus_pvector (PPP)       p-vector plus p-vector
+///- pvector_minus_pvector (PMP)       p-vector minus p-vector
+///- pvector_plus_scaled_pvector (PPSP)      p-vector plus scaled p-vector
+///- pvector_dot_product (PDP)       inner (=scalar=dot) product of two p-vectors
+///- pvector_cross_product (PXP)       outer (=vector=cross) product of two p-vectors
+///- pvector_modulus (PM)        modulus of p-vector
+///- pvector_normalize (PN)        normalize p-vector returning modulus
+///- pvector_multiply_scalar (SXP)       multiply p-vector by scalar
 pub mod vec_ops {
     use crate::Pvector;
-    use crate::vml::pvrm::initialize::zp;
+    use crate::vml::pvrm::initialize::zero_p_vector;
     //TODO: SIMD would probably provide gains for this module
 
     ///  P-vector addition.
@@ -570,10 +563,9 @@ pub mod vec_ops {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn ppp(a: &Pvector, b: &Pvector) -> Pvector {
+    pub fn pvector_plus_pvector(a: &Pvector, b: &Pvector) -> Pvector {
         [a[0] + b[0], a[1] + b[1], a[2] + b[2]]
     }
-    pub use ppp as pvector_plus_pvector;
 
     ///  P-vector subtraction.
     ///
@@ -594,10 +586,9 @@ pub mod vec_ops {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn pmp(a: &Pvector, b: &Pvector) -> Pvector {
+    pub fn pvector_minus_pvector(a: &Pvector, b: &Pvector) -> Pvector {
         [a[0] - b[0], a[1] - b[1], a[2] - b[2]]
     }
-    pub use pmp as pvector_minus_pvector;
 
     ///  P-vector plus scaled p-vector.
     ///
@@ -622,11 +613,10 @@ pub mod vec_ops {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn ppsp(a: &Pvector, s: f64, b: &Pvector) -> Pvector {
-        let sb = sxp(s, b);
-        ppp(a, &sb)
+    pub fn pvector_plus_scaled_pvector(a: &Pvector, s: f64, b: &Pvector) -> Pvector {
+        let sb = pvector_multiply_scalar(s, b);
+        pvector_plus_pvector(a, &sb)
     }
-    pub use ppsp as pvector_plus_scaled_pvector;
 
     ///  p-vector inner (=scalar=dot) product.
     ///
@@ -643,10 +633,9 @@ pub mod vec_ops {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn pdp(a: &Pvector, b: &Pvector) -> f64 {
+    pub fn pvector_dot_product(a: &Pvector, b: &Pvector) -> f64 {
         a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
     }
-    pub use pdp as pvector_dot_product;
 
     ///  p-vector outer (=vector=cross) product.
     ///
@@ -667,7 +656,7 @@ pub mod vec_ops {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn pxp(a: &Pvector, b: &Pvector) -> Pvector {
+    pub fn pvector_cross_product(a: &Pvector, b: &Pvector) -> Pvector {
         let xa = a[0];
         let ya = a[1];
         let za = a[2];
@@ -676,7 +665,6 @@ pub mod vec_ops {
         let zb = b[2];
         [ya * zb - za * yb, za * xb - xa * zb, xa * yb - ya * xb]
     }
-    pub use pxp as pvector_cross_product;
 
     ///  Modulus of p-vector.
     ///
@@ -692,10 +680,9 @@ pub mod vec_ops {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn pm(p: &Pvector) -> f64 {
+    pub fn pvector_modulus(p: &Pvector) -> f64 {
         (p[0] * p[0] + p[1] * p[1] + p[2] * p[2]).sqrt()
     }
-    pub use pm as pvector_modulus;
 
     ///  Convert a p-vector into modulus and unit vector.
     ///
@@ -725,20 +712,19 @@ pub mod vec_ops {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn pn(p: &Pvector) -> (f64, Pvector) {
+    pub fn pvector_normalize(p: &Pvector) -> (f64, Pvector) {
         // Obtain the modulus and test for zero.
-        let w = pm(p);
+        let w = pvector_modulus(p);
         if w == 0.0 {
             // Null vector.
-            let u = zp();
+            let u = zero_p_vector();
             (w, u)
         } else {
             // Unit vector.
-            let u = sxp(1.0 / w, p);
+            let u = pvector_multiply_scalar(1.0 / w, p);
             (w, u)
         }
     }
-    pub use pn as pvector_normalize;
 
     ///  Multiply a p-vector by a scalar.
     ///
@@ -758,10 +744,9 @@ pub mod vec_ops {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn sxp(s: f64, p: &Pvector) -> Pvector {
+    pub fn pvector_multiply_scalar(s: f64, p: &Pvector) -> Pvector {
         [s * p[0], s * p[1], s * p[2]]
     }
-    pub use sxp as pvector_multiply_scalar;
 
     #[cfg(test)]
     mod tests {
@@ -774,7 +759,7 @@ pub mod vec_ops {
         fn test_ppp() {
             let a = [2.0, 2.0, 3.0];
             let b = [1.0, 3.0, 4.0];
-            let apb = ppp(&a, &b);
+            let apb = pvector_plus_pvector(&a, &b);
             assert_eq!(apb, [3.0, 5.0, 7.0]);
         }
 
@@ -783,7 +768,7 @@ pub mod vec_ops {
         fn test_pmp() {
             let a = [2.0, 2.0, 3.0];
             let b = [1.0, 3.0, 4.0];
-            let amb = pmp(&a, &b);
+            let amb = pvector_minus_pvector(&a, &b);
             assert_eq!(amb, [1.0, -1.0, -1.0]);
         }
 
@@ -793,7 +778,7 @@ pub mod vec_ops {
             let a = [2.0, 2.0, 3.0];
             let s = 5.0;
             let b = [1.0, 3.0, 4.0];
-            let apsb = ppsp(&a, s, &b);
+            let apsb = pvector_plus_scaled_pvector(&a, s, &b);
             assert_eq!(apsb, [7.0, 17.0, 23.0]);
         }
 
@@ -802,7 +787,7 @@ pub mod vec_ops {
         fn test_pdp() {
             let a = [2.0, 2.0, 3.0];
             let b = [1.0, 3.0, 4.0];
-            let apb = pdp(&a, &b);
+            let apb = pvector_dot_product(&a, &b);
             assert_eq!(apb, 20.0);
         }
 
@@ -811,7 +796,7 @@ pub mod vec_ops {
         fn test_pxp() {
             let a = [2.0, 2.0, 3.0];
             let b = [1.0, 3.0, 4.0];
-            let axb = pxp(&a, &b);
+            let axb = pvector_cross_product(&a, &b);
             assert_eq!(axb, [-1.0, -5.0, 4.0]);
         }
 
@@ -819,7 +804,7 @@ pub mod vec_ops {
         #[test]
         fn test_pm() {
             let p = [0.3, 1.2, -2.5];
-            let r = pm(&p);
+            let r = pvector_modulus(&p);
             assert_approx_eq!(r, 2.789265136196270604, 1e-12);
         }
 
@@ -827,7 +812,7 @@ pub mod vec_ops {
         #[test]
         fn test_pn() {
             let p = [0.3, 1.2, -2.5];
-            let (r, u) = pn(&p);
+            let (r, u) = pvector_normalize(&p);
             assert_approx_eq!(r, 2.789265136196270604, 1e-12);
 
             assert_approx_eq!(u[0], 0.1075552109073112058, 1e-12);
@@ -838,7 +823,7 @@ pub mod vec_ops {
         #[test]
         fn test_pn_zero() {
             let p = [0.0, 0.0, 0.0];
-            let (r, u) = pn(&p);
+            let (r, u) = pvector_normalize(&p);
             assert_eq!(r, 0.0);
             assert_eq!(u, [0.0, 0.0, 0.0]);
         }
@@ -848,7 +833,7 @@ pub mod vec_ops {
         fn test_sxp() {
             let s = 2.0;
             let p = [0.3, 1.2, -2.5];
-            let sp = sxp(s, &p);
+            let sp = pvector_multiply_scalar(s, &p);
             assert_eq!(sp, [0.6, 2.4, -5.0]);
         }
     }
@@ -856,11 +841,11 @@ pub mod vec_ops {
 
 /// Operations on matrices
 ///
-/// RXR       r-matrix multiply
-/// TR        transpose r-matrix
+/// - rmatrix_multiply (RXR)       r-matrix multiply
+/// - transpose_rmatrix (TR)        transpose r-matrix
 pub mod matrix_ops {
     use crate::Rmatrix;
-    use crate::vml::pvrm::initialize::zr;
+    use crate::vml::pvrm::initialize::zero_r_matrix;
 
     // TODO: SIMD
     ///  Multiply two r-matrices.
@@ -886,9 +871,9 @@ pub mod matrix_ops {
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
     #[allow(clippy::needless_range_loop)]
-    pub fn rxr(a: &Rmatrix, b: &Rmatrix) -> Rmatrix {
+    pub fn rmatrix_multiply(a: &Rmatrix, b: &Rmatrix) -> Rmatrix {
         //TODO: naive mmultiply implementation
-        let mut atb = zr();
+        let mut atb = zero_r_matrix();
         let mut w;
         for i in 0..3 {
             for j in 0..3 {
@@ -901,7 +886,6 @@ pub mod matrix_ops {
         }
         atb
     }
-    pub use rxr as rmatrix_mutiply;
 
     ///  Transpose an r-matrix.
     ///
@@ -924,8 +908,8 @@ pub mod matrix_ops {
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
     #[allow(clippy::needless_range_loop)]
-    pub fn tr(r: &Rmatrix) -> Rmatrix {
-        let mut tr = zr();
+    pub fn transpose_rmatrix(r: &Rmatrix) -> Rmatrix {
+        let mut tr = zero_r_matrix();
         for i in 0..3 {
             for j in 0..3 {
                 tr[i][j] = r[j][i];
@@ -933,12 +917,11 @@ pub mod matrix_ops {
         }
         tr
     }
-    pub use tr as transpose_rmatrix;
 
     #[cfg(test)]
     mod tests {
         use super::*;
-        use crate::vml::pvrm::initialize::zr;
+        use crate::vml::pvrm::initialize::zero_r_matrix;
 
         /// t_sofa.c t_rxr
         #[test]
@@ -946,7 +929,7 @@ pub mod matrix_ops {
             let a = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
             let b = [[1.0, 2.0, 2.0], [4.0, 1.0, 1.0], [3.0, 0.0, 1.0]];
             let atb = [[20.0, 7.0, 9.0], [20.0, 8.0, 11.0], [34.0, 10.0, 15.0]];
-            let result = rxr(&a, &b);
+            let result = rmatrix_multiply(&a, &b);
             assert_eq!(result, atb);
         }
 
@@ -955,8 +938,8 @@ pub mod matrix_ops {
             use rsofa::iauRxr;
             let mut a = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
             let mut b = [[1.0, 2.0, 2.0], [4.0, 1.0, 1.0], [3.0, 0.0, 1.0]];
-            let atb = rxr(&a, &b);
-            let mut atb_iau = zr();
+            let atb = rmatrix_multiply(&a, &b);
+            let mut atb_iau = zero_r_matrix();
             unsafe {
                 iauRxr(a.as_mut_ptr(), b.as_mut_ptr(), atb_iau.as_mut_ptr());
             }
@@ -968,7 +951,7 @@ pub mod matrix_ops {
         fn test_tr() {
             let r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
             let rt = [[2.0, 3.0, 3.0], [3.0, 2.0, 4.0], [2.0, 3.0, 5.0]];
-            let result = tr(&r);
+            let result = transpose_rmatrix(&r);
             assert_eq!(result, rt);
         }
 
@@ -977,8 +960,8 @@ pub mod matrix_ops {
             use rsofa::iauTr;
             let mut r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
             // let rt = [[2.0, 3.0, 3.0], [3.0, 2.0, 4.0], [2.0, 3.0, 5.0]];
-            let rt = tr(&r);
-            let mut rt_iau = zr();
+            let rt = transpose_rmatrix(&r);
+            let mut rt_iau = zero_r_matrix();
             unsafe {
                 iauTr(r.as_mut_ptr(), rt_iau.as_mut_ptr());
             }
@@ -988,11 +971,11 @@ pub mod matrix_ops {
 }
 
 /// Matrix-vector products
-/// - RXP       product of r-matrix and p-vector
-/// - TRXP      product of transpose of r-matrix and p-vector
+/// - rmatrix_pvector_product (RXP)       product of r-matrix and p-vector
+/// - transpose_rmatrix_pvector_product (TRXP)      product of transpose of r-matrix and p-vector
 pub mod matrix_vec_products {
-    use crate::vml::pvrm::initialize::zp;
-    use crate::vml::pvrm::matrix_ops::tr;
+    use crate::vml::pvrm::initialize::zero_p_vector;
+    use crate::vml::pvrm::matrix_ops::transpose_rmatrix;
     use crate::{Pvector, Rmatrix};
 
     ///  Multiply a p-vector by an r-matrix.
@@ -1017,10 +1000,10 @@ pub mod matrix_vec_products {
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
     #[allow(clippy::needless_range_loop)]
-    pub fn rxp(r: &Rmatrix, p: &Pvector) -> Pvector {
+    pub fn rmatrix_pvector_product(r: &Rmatrix, p: &Pvector) -> Pvector {
         //TODO No need for mut here
         let mut w;
-        let mut rp = zp();
+        let mut rp = zero_p_vector();
         for j in 0..3 {
             w = 0.0;
             for i in 0..3 {
@@ -1030,7 +1013,6 @@ pub mod matrix_vec_products {
         }
         rp
     }
-    pub use rxp as rmatrix_pvector_product;
 
     ///  Multiply a p-vector by the transpose of an r-matrix.
     ///
@@ -1054,14 +1036,13 @@ pub mod matrix_vec_products {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn trxp(r: &Rmatrix, p: &Pvector) -> Pvector {
+    pub fn transpose_rmatrix_pvector_product(r: &Rmatrix, p: &Pvector) -> Pvector {
         // Transpose of matrix r.
-        let transpose = tr(r);
+        let transpose = transpose_rmatrix(r);
 
         // Matrix tr * vector p -> vector trp
-        rxp(&transpose, p)
+        rmatrix_pvector_product(&transpose, p)
     }
-    pub use trxp as transpose_rmatrix_pvector_product;
 
     #[cfg(test)]
     mod tests {
@@ -1074,7 +1055,7 @@ pub mod matrix_vec_products {
         fn test_rxp() {
             let r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
             let p = [0.2, 1.5, 0.1];
-            let rp = rxp(&r, &p);
+            let rp = rmatrix_pvector_product(&r, &p);
             assert_approx_eq!(rp[0], 5.1, 1e-12);
             assert_approx_eq!(rp[1], 3.9, 1e-12);
             assert_approx_eq!(rp[2], 7.1, 1e-12);
@@ -1085,9 +1066,9 @@ pub mod matrix_vec_products {
             use rsofa::iauRxp;
             let mut r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
             let mut p = [0.2, 1.5, 0.1];
-            let rp = rxp(&r, &p);
+            let rp = rmatrix_pvector_product(&r, &p);
 
-            let mut rp_iau = zp();
+            let mut rp_iau = zero_p_vector();
             unsafe {
                 iauRxp(r.as_mut_ptr(), p.as_mut_ptr(), rp_iau.as_mut_ptr());
             }
@@ -1099,7 +1080,7 @@ pub mod matrix_vec_products {
         fn test_trxp() {
             let r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
             let p = [0.2, 1.5, 0.1];
-            let trp = trxp(&r, &p);
+            let trp = transpose_rmatrix_pvector_product(&r, &p);
             assert_approx_eq!(trp[0], 5.2, 1e-12);
             assert_approx_eq!(trp[1], 4.0, 1e-12);
             assert_approx_eq!(trp[2], 5.4, 1e-12);
@@ -1110,8 +1091,8 @@ pub mod matrix_vec_products {
             use rsofa::iauTrxp;
             let mut r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
             let mut p = [0.2, 1.5, 0.1];
-            let trp = trxp(&r, &p);
-            let mut trp_iau = zp();
+            let trp = transpose_rmatrix_pvector_product(&r, &p);
+            let mut trp_iau = zero_p_vector();
             unsafe {
                 iauTrxp(r.as_mut_ptr(), p.as_mut_ptr(), trp_iau.as_mut_ptr());
             }
@@ -1121,17 +1102,20 @@ pub mod matrix_vec_products {
 }
 
 /// Separation and position-angle
-/// - SEPP      angular separation from p-vectors
-/// - SEPS      angular separation from spherical coordinates
-/// - PAP       position-angle from p-vectors
-/// - PAS       position-angle from spherical coordinates
+/// - angular_separation_pvector (SEPP)      angular separation from p-vectors
+/// - angular_separation_spherical (SEPS)      angular separation from spherical coordinates
+/// - position_angle_from_pvector (PAP)       position-angle from p-vectors
+/// - position_angle_from_spherical (PAS)       position-angle from spherical coordinates
 pub mod sep_position_angle {
     use crate::{
         Pvector,
         vml::pvrm::{
-            initialize::zp,
-            sphere_cart_conv::s2c,
-            vec_ops::{pdp, pm, pmp, pn, pxp},
+            initialize::zero_p_vector,
+            sphere_cart_conv::spherical_to_unit_vector,
+            vec_ops::{
+                pvector_cross_product, pvector_dot_product, pvector_minus_pvector, pvector_modulus,
+                pvector_normalize,
+            },
         },
     };
 
@@ -1165,13 +1149,13 @@ pub mod sep_position_angle {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn sepp(a: &Pvector, b: &Pvector) -> f64 {
+    pub fn angular_separation_pvector(a: &Pvector, b: &Pvector) -> f64 {
         // Sine of angle between the vectors, multiplied by the two moduli.
-        let axb = pxp(a, b);
-        let ss = pm(&axb);
+        let axb = pvector_cross_product(a, b);
+        let ss = pvector_modulus(&axb);
 
         // Cosine of the angle, multiplied by the two moduli.
-        let cs = pdp(a, b);
+        let cs = pvector_dot_product(a, b);
 
         // The angle.
         if ss != 0.0 || cs != 0.0 {
@@ -1180,7 +1164,6 @@ pub mod sep_position_angle {
             0.0
         }
     }
-    pub use sepp as angular_separation_pvector;
 
     ///  Angular separation between two sets of spherical coordinates.
     ///
@@ -1203,15 +1186,14 @@ pub mod sep_position_angle {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn seps(al: f64, ap: f64, bl: f64, bp: f64) -> f64 {
+    pub fn angular_separation_spherical(al: f64, ap: f64, bl: f64, bp: f64) -> f64 {
         // Spherical to Cartesian.
-        let ac = s2c(al, ap);
-        let bc = s2c(bl, bp);
+        let ac = spherical_to_unit_vector(al, ap);
+        let bc = spherical_to_unit_vector(bl, bp);
 
         // Angle between the vectors.
-        sepp(&ac, &bc)
+        angular_separation_pvector(&ac, &bc)
     }
-    pub use seps as angular_separation_spherical;
 
     ///  Position-angle from two p-vectors.
     ///
@@ -1250,16 +1232,16 @@ pub mod sep_position_angle {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn pap(a: &Pvector, b: &Pvector) -> f64 {
+    pub fn position_angle_from_pvector(a: &Pvector, b: &Pvector) -> f64 {
         let st: f64;
         let mut ct: f64;
-        let mut eta = zp();
+        let mut eta = zero_p_vector();
 
         // Modulus and direction of the a vector.
-        let (am, au) = pn(a);
+        let (am, au) = pvector_normalize(a);
 
         // Modulus of the b vector.
-        let bm = pm(b);
+        let bm = pvector_modulus(b);
 
         // Deal with the case of a null vector
         if am == 0.0 || bm == 0.0 {
@@ -1275,14 +1257,14 @@ pub mod sep_position_angle {
             eta[2] = xa * xa + ya * ya;
 
             // The "east" axis tangential from a (same length).
-            let xi = pxp(&eta, &au);
+            let xi = pvector_cross_product(&eta, &au);
 
             // The vector from a to b.
-            let a2b = pmp(b, a);
+            let a2b = pvector_minus_pvector(b, a);
 
             // Resolve into components along the north and east axes.
-            st = pdp(&a2b, &xi);
-            ct = pdp(&a2b, &eta);
+            st = pvector_dot_product(&a2b, &xi);
+            ct = pvector_dot_product(&a2b, &eta);
 
             // Deal with degenerate cases
             if st == 0.0 && ct == 0.0 {
@@ -1293,7 +1275,6 @@ pub mod sep_position_angle {
         // Position angle
         st.atan2(ct)
     }
-    pub use pap as postition_angle_from_pvector;
 
     ///  Position-angle from spherical coordinates.
     ///
@@ -1321,7 +1302,7 @@ pub mod sep_position_angle {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn pas(al: f64, ap: f64, bl: f64, bp: f64) -> f64 {
+    pub fn position_angle_from_spherical(al: f64, ap: f64, bl: f64, bp: f64) -> f64 {
         let dl = bl - al;
         let y = dl.sin() * bp.cos();
         let x = bp.sin() * ap.cos() - bp.cos() * ap.sin() * dl.cos();
@@ -1331,7 +1312,6 @@ pub mod sep_position_angle {
             0.0
         }
     }
-    pub use pas as postition_angle_from_spherical;
 
     #[cfg(test)]
     mod tests {
@@ -1344,7 +1324,7 @@ pub mod sep_position_angle {
         fn test_sepp() {
             let a = [1.0, 0.1, 0.2];
             let b = [-3.0, 1e-3, 0.2];
-            let s = sepp(&a, &b);
+            let s = angular_separation_pvector(&a, &b);
             assert_approx_eq!(s, 2.860391919024660768, 1e-12);
         }
 
@@ -1353,7 +1333,7 @@ pub mod sep_position_angle {
             use rsofa::iauSepp;
             let mut a = [1.0, 0.1, 0.2];
             let mut b = [-3.0, 1e-3, 0.2];
-            let s = sepp(&a, &b);
+            let s = angular_separation_pvector(&a, &b);
             unsafe {
                 let s_iau = iauSepp(a.as_mut_ptr(), b.as_mut_ptr());
                 assert_eq!(s, s_iau);
@@ -1368,7 +1348,7 @@ pub mod sep_position_angle {
 
             let bl = 0.2;
             let bp = -3.0;
-            let s = seps(al, ap, bl, bp);
+            let s = angular_separation_spherical(al, ap, bl, bp);
             assert_approx_eq!(s, 2.346722016996998842, 1e-14);
         }
 
@@ -1380,7 +1360,7 @@ pub mod sep_position_angle {
 
             let bl = 0.2;
             let bp = -3.0;
-            let s = seps(al, ap, bl, bp);
+            let s = angular_separation_spherical(al, ap, bl, bp);
             unsafe {
                 let s_iau = iauSeps(al, ap, bl, bp);
                 assert_eq!(s, s_iau);
@@ -1392,7 +1372,7 @@ pub mod sep_position_angle {
         fn test_pap() {
             let a = [1.0, 0.1, 0.2];
             let b = [-3.0, 1e-3, 0.2];
-            let theta = pap(&a, &b);
+            let theta = position_angle_from_pvector(&a, &b);
             assert_approx_eq!(theta, 0.3671514267841113674, 1e-12);
         }
 
@@ -1401,7 +1381,7 @@ pub mod sep_position_angle {
             use rsofa::iauPap;
             let mut a = [1.0, 0.1, 0.2];
             let mut b = [-3.0, 1e-3, 0.2];
-            let theta = pap(&a, &b);
+            let theta = position_angle_from_pvector(&a, &b);
             unsafe {
                 let theta_iau = iauPap(a.as_mut_ptr(), b.as_mut_ptr());
                 assert_eq!(theta, theta_iau);
@@ -1416,7 +1396,7 @@ pub mod sep_position_angle {
             let bl = 0.2;
             let bp = -1.0;
 
-            let theta = pas(al, ap, bl, bp);
+            let theta = position_angle_from_spherical(al, ap, bl, bp);
             assert_approx_eq!(theta, -2.724544922932270424, 1e-12);
         }
 
@@ -1428,7 +1408,7 @@ pub mod sep_position_angle {
             let bl = 0.2;
             let bp = -1.0;
 
-            let theta = pas(al, ap, bl, bp);
+            let theta = position_angle_from_spherical(al, ap, bl, bp);
             unsafe {
                 let theta_iau = iauPas(al, ap, bl, bp);
                 assert_eq!(theta, theta_iau);
@@ -1438,10 +1418,10 @@ pub mod sep_position_angle {
 }
 
 /// Rotation vectors
-/// - RV2M      r-vector to r-matrix
-/// - RM2V      r-matrix to r-vector
+/// - rvector_to_rmatrix (RV2M)      r-vector to r-matrix
+/// - rmatrix_to_rvector (RM2V)      r-matrix to r-vector
 pub mod rotation_vectors {
-    use crate::{Pvector, Rmatrix, vml::pvrm::initialize::zr};
+    use crate::{Pvector, Rmatrix, vml::pvrm::initialize::zero_r_matrix};
     ///  Form the r-matrix corresponding to a given r-vector.
     ///
     ///  Given:
@@ -1468,7 +1448,7 @@ pub mod rotation_vectors {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn rv2m(w: &Pvector) -> Rmatrix {
+    pub fn rvector_to_rmatrix(w: &Pvector) -> Rmatrix {
         // Euler angle (magnitude of rotation vector) and functions.
         let mut x = w[0];
         let mut y = w[1];
@@ -1486,7 +1466,7 @@ pub mod rotation_vectors {
         }
 
         // Form the rotation matrix.
-        let mut r = zr();
+        let mut r = zero_r_matrix();
         r[0][0] = x * x * f + c;
         r[0][1] = x * y * f + z * s;
         r[0][2] = x * z * f - y * s;
@@ -1499,7 +1479,6 @@ pub mod rotation_vectors {
 
         r
     }
-    pub use rv2m as rvector_to_rmatrix;
 
     ///  Express an r-matrix as an r-vector.
     ///
@@ -1530,7 +1509,7 @@ pub mod rotation_vectors {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn rm2v(r: &Rmatrix) -> Pvector {
+    pub fn rmatrix_to_rvector(r: &Rmatrix) -> Pvector {
         // TODO: Type for Rvector
         let x = r[1][2] - r[2][1];
         let y = r[2][0] - r[0][2];
@@ -1545,7 +1524,6 @@ pub mod rotation_vectors {
             [0.0, 0.0, 0.0]
         }
     }
-    pub use rm2v as rmatrix_to_rvector;
 
     #[cfg(test)]
     mod tests {
@@ -1557,7 +1535,7 @@ pub mod rotation_vectors {
         #[test]
         fn test_rv2m() {
             let w = [0.0, 1.41371669, -1.88495559];
-            let r = rv2m(&w);
+            let r = rvector_to_rmatrix(&w);
 
             assert_approx_eq!(r[0][0], -0.7071067782221119905, 1e-14);
             assert_approx_eq!(r[0][1], -0.5656854276809129651, 1e-14);
@@ -1576,9 +1554,9 @@ pub mod rotation_vectors {
         fn test_rv2m_parity() {
             use rsofa::iauRv2m;
             let mut w = [0.0, 1.41371669, -1.88495559];
-            let r = rv2m(&w);
+            let r = rvector_to_rmatrix(&w);
 
-            let mut iau_r = zr();
+            let mut iau_r = zero_r_matrix();
             unsafe {
                 iauRv2m(w.as_mut_ptr(), iau_r.as_mut_ptr());
             }
@@ -1587,9 +1565,9 @@ pub mod rotation_vectors {
 
         /// t_sofa.c t_rm2v
         #[test]
-        fn test_rm2v() {
+        fn test_rmatrix_to_rvector() {
             let r = [[0.0, -0.8, -0.6], [0.8, -0.36, 0.48], [0.6, 0.48, -0.64]];
-            let w = rm2v(&r);
+            let w = rmatrix_to_rvector(&r);
 
             assert_approx_eq!(w[0], 0.0, 1e-12);
             assert_approx_eq!(w[1], 1.413716694115406957, 1e-12);
@@ -1597,11 +1575,11 @@ pub mod rotation_vectors {
         }
 
         #[test]
-        fn test_rm2v_parity() {
+        fn test_rmatrix_to_rvector_parity() {
             use rsofa::iauRm2v;
 
             let mut r = [[0.0, -0.8, -0.6], [0.8, -0.36, 0.48], [0.6, 0.48, -0.64]];
-            let w = rm2v(&r);
+            let w = rmatrix_to_rvector(&r);
 
             let mut w_iau = [0.0, 0.0, 0.0];
             unsafe {

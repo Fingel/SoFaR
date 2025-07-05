@@ -1,9 +1,9 @@
 //! Operations on angles
 
 ///   To sexagesimal
-///   - A2TF      decompose radians into hours, minutes, seconds
+///   - radians_to_hms (A2TF)      decompose radians into hours, minutes, seconds
 ///   - A2AF      decompose radians into degrees, arcminutes, arcseconds
-///   - D2TF      decompose days into hours, minutes, seconds
+///   - days_to_hms (D2TF)      decompose days into hours, minutes, seconds
 pub mod to_sexagesimal {
     use crate::constants::*;
     use crate::{dint, dnint};
@@ -62,11 +62,10 @@ pub mod to_sexagesimal {
     ///  SOFA release 2023-10-11
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
-    pub fn a2tf(ndp: i32, angle: f64) -> (char, [i32; 4]) {
+    pub fn radians_to_hms(ndp: i32, angle: f64) -> (char, [i32; 4]) {
         // Scale then use days to h,m,s function.
-        d2tf(ndp, angle / D2PI)
+        days_to_hms(ndp, angle / D2PI)
     }
-    pub use a2tf as radians_to_hms;
 
     //TODO: optimize
     ///  Decompose days to hours, minutes, seconds, fraction.
@@ -121,7 +120,7 @@ pub mod to_sexagesimal {
     ///  SOFA release 2023-10-11
     ///
     ///  Copyright (C) 2023 IAU SOFA Board.  See notes at end.
-    pub fn d2tf(ndp: i32, days: f64) -> (char, [i32; 4]) {
+    pub fn days_to_hms(ndp: i32, days: f64) -> (char, [i32; 4]) {
         let mut nrs: i32;
         let mut rs: f64;
 
@@ -170,7 +169,6 @@ pub mod to_sexagesimal {
         // Return results
         (sign, [ah as i32, am as i32, r#as as i32, af as i32])
     }
-    pub use d2tf as days_to_hms;
 
     #[cfg(test)]
     mod tests {
@@ -179,14 +177,14 @@ pub mod to_sexagesimal {
         /// t_sofa.c t_a2tf
         #[test]
         fn test_a2tf() {
-            let result = a2tf(4, -3.01234);
+            let result = radians_to_hms(4, -3.01234);
             assert_eq!(result, ('-', [11, 30, 22, 6484]));
         }
 
         /// t_sofa.c t_d2tf
         #[test]
         fn test_d2tf() {
-            let result = d2tf(4, -0.987654321);
+            let result = days_to_hms(4, -0.987654321);
             assert_eq!(result, ('-', [23, 42, 13, 3333]));
         }
     }

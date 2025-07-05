@@ -34,3 +34,51 @@ fn dnint(x: f64) -> f64 {
 fn dint(x: f64) -> f64 {
     if x < 0.0 { x.ceil() } else { x.floor() }
 }
+
+// Angle conversions
+pub use vml::angles::to_sexagesimal::days_to_hms as d2tf;
+pub use vml::angles::to_sexagesimal::radians_to_hms as a2tf;
+
+// Initialize
+pub use vml::pvrm::initialize::identity_r_matrix as ir;
+pub use vml::pvrm::initialize::zero_p_vector as zp;
+pub use vml::pvrm::initialize::zero_r_matrix as zr;
+
+// Rotations
+pub use vml::pvrm::rotations::rotate_rmatrix_about_x as rx;
+pub use vml::pvrm::rotations::rotate_rmatrix_about_y as ry;
+pub use vml::pvrm::rotations::rotate_rmatrix_about_z as rz;
+
+// Spherical/Cartesian conversions
+pub use vml::pvrm::sphere_cart_conv::p_vector_to_spherical as p2s;
+pub use vml::pvrm::sphere_cart_conv::spherical_to_p_vector as s2p;
+pub use vml::pvrm::sphere_cart_conv::spherical_to_unit_vector as s2c;
+pub use vml::pvrm::sphere_cart_conv::unit_vector_to_spherical as c2s;
+
+// Operations on vectors
+pub use vml::pvrm::vec_ops::pvector_cross_product as pxp;
+pub use vml::pvrm::vec_ops::pvector_dot_product as pdp;
+pub use vml::pvrm::vec_ops::pvector_minus_pvector as pmp;
+pub use vml::pvrm::vec_ops::pvector_modulus as pm;
+pub use vml::pvrm::vec_ops::pvector_multiply_scalar as sxp;
+pub use vml::pvrm::vec_ops::pvector_normalize as pn;
+pub use vml::pvrm::vec_ops::pvector_plus_pvector as ppp;
+pub use vml::pvrm::vec_ops::pvector_plus_scaled_pvector as ppsp;
+
+// Operations on matrices
+pub use vml::pvrm::matrix_ops::rmatrix_multiply as rxr;
+pub use vml::pvrm::matrix_ops::transpose_rmatrix as tr;
+
+// Matrix-vector products
+pub use vml::pvrm::matrix_vec_products::rmatrix_pvector_product as rxp;
+pub use vml::pvrm::matrix_vec_products::transpose_rmatrix_pvector_product as trxp;
+
+// Separation and position-angle
+pub use vml::pvrm::sep_position_angle::angular_separation_pvector as sepp;
+pub use vml::pvrm::sep_position_angle::angular_separation_spherical as seps;
+pub use vml::pvrm::sep_position_angle::position_angle_from_pvector as pap;
+pub use vml::pvrm::sep_position_angle::position_angle_from_spherical as pas;
+
+// Rotation vectors
+pub use vml::pvrm::rotation_vectors::rmatrix_to_rvector as rm2v;
+pub use vml::pvrm::rotation_vectors::rvector_to_rmatrix as rv2m;
