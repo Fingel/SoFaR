@@ -9,11 +9,6 @@ pub mod initialize {
 
     ///  Zero a p-vector.
     ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
-    ///
     ///  Returned:
     ///     p        double[3]      zero p-vector
     ///
@@ -29,11 +24,6 @@ pub mod initialize {
 
     ///  Initialize an r-matrix to the null matrix.
     ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
-    ///
     ///  Returned:
     ///     r        double[3][3]    r-matrix
     ///
@@ -48,11 +38,6 @@ pub mod initialize {
     pub use zr as zero_r_matrix;
 
     ///  Initialize an r-matrix to the identity matrix.
-    ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
     ///
     ///  Returned:
     ///     r       double[3][3]    r-matrix
@@ -107,11 +92,6 @@ pub mod copy {
     use crate::{Pvector, Rmatrix};
     ///  Copy a p-vector.
     ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
-    ///
     ///  Given:
     ///     p        double[3]     p-vector to be copied
     ///
@@ -129,11 +109,6 @@ pub mod copy {
     }
 
     ///  Copy an r-matrix.
-    ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
     ///
     ///  Given:
     ///     r        double[3][3]    r-matrix to be copied
@@ -191,11 +166,6 @@ pub mod rotations {
 
     ///  Rotate an r-matrix about the x-axis.
     ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
-    ///
     ///  Given:
     ///     phi    double          angle (radians)
     ///
@@ -238,11 +208,6 @@ pub mod rotations {
     }
 
     ///  Rotate an r-matrix about the y-axis.
-    ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
     ///
     ///  Given:
     ///     theta  double          angle (radians)
@@ -287,11 +252,6 @@ pub mod rotations {
     }
 
     ///  Rotate an r-matrix about the z-axis.
-    ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
     ///
     ///  Given:
     ///     psi    double          angle (radians)
@@ -412,11 +372,6 @@ pub mod sphere_cart_conv {
 
     ///  Convert spherical coordinates to Cartesian.
     ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
-    ///
     ///  Given:
     ///     theta    double       longitude angle (radians)
     ///     phi      double       latitude angle (radians)
@@ -436,11 +391,6 @@ pub mod sphere_cart_conv {
     pub use s2c as spherical_to_unit_vector;
 
     ///  P-vector to spherical coordinates.
-    ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
     ///
     ///  Given:
     ///     p      double[3]    p-vector
@@ -475,11 +425,6 @@ pub mod sphere_cart_conv {
 
     ///  Convert spherical polar coordinates to p-vector.
     ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
-    ///
     ///  Given:
     ///     theta   double       longitude angle (radians)
     ///     phi     double       latitude angle (radians)
@@ -504,11 +449,6 @@ pub mod sphere_cart_conv {
     pub use s2p as spherical_to_p_vector;
 
     ///  P-vector to spherical polar coordinates.
-    ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
     ///
     ///  Given:
     ///     p        double[3]    p-vector
@@ -601,11 +541,6 @@ pub mod vec_ops {
 
     ///  P-vector addition.
     ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
-    ///
     ///  Given:
     ///     a        double[3]      first p-vector
     ///     b        double[3]      second p-vector
@@ -629,11 +564,6 @@ pub mod vec_ops {
 
     ///  P-vector subtraction.
     ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
-    ///
     ///  Given:
     ///     a        double[3]      first p-vector
     ///     b        double[3]      second p-vector
@@ -656,11 +586,6 @@ pub mod vec_ops {
     pub use pmp as pvector_minus_pvector;
 
     ///  P-vector plus scaled p-vector.
-    ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
     ///
     ///  Given:
     ///     a      double[3]     first p-vector
@@ -690,11 +615,6 @@ pub mod vec_ops {
 
     ///  p-vector inner (=scalar=dot) product.
     ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
-    ///
     ///  Given:
     ///     a      double[3]     first p-vector
     ///     b      double[3]     second p-vector
@@ -713,11 +633,6 @@ pub mod vec_ops {
     pub use pdp as pvector_dot_product;
 
     ///  p-vector outer (=vector=cross) product.
-    ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
     ///
     ///  Given:
     ///     a        double[3]      first p-vector
@@ -748,11 +663,6 @@ pub mod vec_ops {
 
     ///  Modulus of p-vector.
     ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
-    ///
     ///  Given:
     ///     p      double[3]     p-vector
     ///
@@ -770,11 +680,6 @@ pub mod vec_ops {
     pub use pm as pvector_modulus;
 
     ///  Convert a p-vector into modulus and unit vector.
-    ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
     ///
     ///  Given:
     ///     p        double[3]      p-vector
@@ -817,11 +722,6 @@ pub mod vec_ops {
     pub use pn as pvector_normalize;
 
     ///  Multiply a p-vector by a scalar.
-    ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
     ///
     ///  Given:
     ///     s      double        scalar
@@ -945,11 +845,6 @@ pub mod matrix_ops {
     // TODO: SIMD
     ///  Multiply two r-matrices.
     ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
-    ///
     ///  Given:
     ///     a        double[3][3]    first r-matrix
     ///     b        double[3][3]    second r-matrix
@@ -988,11 +883,6 @@ pub mod matrix_ops {
     pub use rxr as rmatrix_mutiply;
 
     ///  Transpose an r-matrix.
-    ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
     ///
     ///  Given:
     ///     r        double[3][3]    r-matrix
@@ -1085,11 +975,6 @@ pub mod matrix_vec_products {
 
     ///  Multiply a p-vector by an r-matrix.
     ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
-    ///
     ///  Given:
     ///     r        double[3][3]    r-matrix
     ///     p        double[3]       p-vector
@@ -1125,11 +1010,6 @@ pub mod matrix_vec_products {
     pub use rxp as rmatrix_pvector_product;
 
     ///  Multiply a p-vector by the transpose of an r-matrix.
-    ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
     ///
     ///  Given:
     ///     r        double[3][3]   r-matrix
@@ -1233,11 +1113,6 @@ pub mod sep_position_angle {
 
     ///  Angular separation between two p-vectors.
     ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
-    ///
     ///  Given:
     ///     a      double[3]    first p-vector (not necessarily unit length)
     ///     b      double[3]    second p-vector (not necessarily unit length)
@@ -1284,11 +1159,6 @@ pub mod sep_position_angle {
 
     ///  Angular separation between two sets of spherical coordinates.
     ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
-    ///
     ///  Given:
     ///     al     double       first longitude (radians)
     ///     ap     double       first latitude (radians)
@@ -1318,11 +1188,6 @@ pub mod sep_position_angle {
     pub use seps as angular_separation_spherical;
 
     ///  Position-angle from two p-vectors.
-    ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
     ///
     ///  Given:
     ///     a      double[3]  direction of reference point
@@ -1404,11 +1269,6 @@ pub mod sep_position_angle {
     pub use pap as postition_angle_from_pvector;
 
     ///  Position-angle from spherical coordinates.
-    ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
     ///
     ///  Given:
     ///     al     double     longitude of point A (e.g. RA) in radians
@@ -1556,11 +1416,6 @@ pub mod rotation_vectors {
     use crate::{Pvector, Rmatrix, vml::pvrm::initialize::zr};
     ///  Form the r-matrix corresponding to a given r-vector.
     ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
-    ///
     ///  Given:
     ///     w        double[3]      rotation vector (Note 1)
     ///
@@ -1618,11 +1473,6 @@ pub mod rotation_vectors {
     pub use rv2m as rvector_to_rmatrix;
 
     ///  Express an r-matrix as an r-vector.
-    ///
-    ///  This function is part of the International Astronomical Union's
-    ///  SOFA (Standards of Fundamental Astronomy) software collection.
-    ///
-    ///  Status:  vector/matrix support function.
     ///
     ///  Given:
     ///     r        double[3][3]    rotation matrix
