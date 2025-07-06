@@ -97,3 +97,7 @@ pub use vml::pvvec::initialize::zero_pvvector as zpv;
 pub use vml::pvvec::copy_extend_extract::append_zvelocity_pvvector as p2pv;
 pub use vml::pvvec::copy_extend_extract::copy_pvvector as cpv;
 pub use vml::pvvec::copy_extend_extract::discard_velocity_pvvector as pv2p;
+
+// Sphereical/Cartesian conversions
+pub use vml::pvvec::sphere_cart_conv::pvvector_to_spherical as pv2s;
+pub use vml::pvvec::sphere_cart_conv::spherical_to_pvvector as s2pv;
