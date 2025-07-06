@@ -500,6 +500,21 @@ pub mod sphere_cart_conv {
             assert_approx_eq!(c[2], -0.8409302618566214041, 1e-12);
         }
 
+        #[test]
+        fn test_s2c_parity() {
+            use crate::vml::pvrm::initialize::zero_p_vector;
+            use rsofa::iauS2c;
+            let theta = 3.0123;
+            let phi = -0.999;
+            let c = spherical_to_unit_vector(theta, phi);
+
+            let mut c_iau = zero_p_vector();
+            unsafe {
+                iauS2c(theta, phi, c_iau.as_mut_ptr());
+            }
+            assert_eq!(c_iau, c);
+        }
+
         /// t_sofa.c t_c2s
         #[test]
         fn test_c2s() {
@@ -507,6 +522,21 @@ pub mod sphere_cart_conv {
             let (theta, phi) = unit_vector_to_spherical(&p);
             assert_approx_eq!(theta, -0.4636476090008061162, 1e-14);
             assert_approx_eq!(phi, 0.2199879773954594463, 1e-14);
+        }
+
+        #[test]
+        fn test_c2s_parity() {
+            use rsofa::iauC2s;
+            let mut p = [100.0, -50.0, 25.0];
+            let (theta, phi) = unit_vector_to_spherical(&p);
+
+            let mut theta_iau = 0.0;
+            let mut phi_iau = 0.0;
+            unsafe {
+                iauC2s(p.as_mut_ptr(), &mut theta_iau, &mut phi_iau);
+            }
+            assert_eq!(theta, theta_iau);
+            assert_eq!(phi, phi_iau);
         }
 
         /// t_sofa.c t_s2p
@@ -518,6 +548,22 @@ pub mod sphere_cart_conv {
             assert_approx_eq!(p[2], 0.0559466810510877933, 1e-12);
         }
 
+        #[test]
+        fn test_s2p_parity() {
+            use crate::vml::pvrm::initialize::zero_p_vector;
+            use rsofa::iauS2p;
+            let theta = -3.21;
+            let phi = 0.123;
+            let r = 0.456;
+            let p = spherical_to_p_vector(theta, phi, r);
+
+            let mut p_iau = zero_p_vector();
+            unsafe {
+                iauS2p(theta, phi, r, p_iau.as_mut_ptr());
+            }
+            assert_eq!(p, p_iau);
+        }
+
         /// t_sofa.c t_p2s
         #[test]
         fn test_p2s() {
@@ -526,6 +572,24 @@ pub mod sphere_cart_conv {
             assert_approx_eq!(theta, -0.4636476090008061162, 1e-12);
             assert_approx_eq!(phi, 0.2199879773954594463, 1e-12);
             assert_approx_eq!(r, 114.5643923738960002, 1e-9);
+        }
+
+        #[test]
+        fn test_p2s_parity() {
+            use rsofa::iauP2s;
+            let mut p = [100.0, -50.0, 25.0];
+            let (theta, phi, r) = p_vector_to_spherical(&p);
+
+            let mut theta_iau = 0.0;
+            let mut phi_iau = 0.0;
+            let mut r_iau = 0.0;
+
+            unsafe {
+                iauP2s(p.as_mut_ptr(), &mut theta_iau, &mut phi_iau, &mut r_iau);
+            }
+            assert_eq!(theta_iau, theta);
+            assert_eq!(phi_iau, phi);
+            assert_eq!(r_iau, r);
         }
     }
 }
