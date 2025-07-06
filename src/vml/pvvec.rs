@@ -466,9 +466,9 @@ pub mod sphere_cart_conv {
 pub mod pvvector_ops {
     use crate::vml::pvrm::vec_ops::{
         pvector_cross_product, pvector_dot_product, pvector_minus_pvector, pvector_modulus,
-        pvector_plus_pvector,
+        pvector_multiply_scalar, pvector_plus_pvector, pvector_plus_scaled_pvector,
     };
-    use crate::{PVvector, cpv};
+    use crate::{PVvector, Pvector, cpv};
 
     ///  Add one pv-vector to another.
     ///
@@ -652,21 +652,132 @@ pub mod pvvector_ops {
 
         (r, s)
     }
-    pub fn pvvector_multiply_scalar() {
-        todo!();
+    ///  Multiply a pv-vector by a scalar.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     s       double          scalar
+    ///     pv      double[2][3]    pv-vector
+    ///
+    ///  Returned:
+    ///     spv     double[2][3]    s * pv
+    ///
+    ///  Note:
+    ///     It is permissible for pv and spv to be the same array.
+    ///
+    ///  Called:
+    ///     iauS2xpv     multiply pv-vector by two scalars
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    pub fn pvvector_multiply_scalar(s: f64, pv: &PVvector) -> PVvector {
+        pvvector_multiply_two_scalar(s, s, pv)
     }
-    pub fn pvvector_multiply_two_scalar() {
-        todo!();
+
+    ///  Multiply a pv-vector by two scalars.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     s1     double         scalar to multiply position component by
+    ///     s2     double         scalar to multiply velocity component by
+    ///     pv     double[2][3]   pv-vector
+    ///
+    ///  Returned:
+    ///     spv    double[2][3]   pv-vector: p scaled by s1, v scaled by s2
+    ///
+    ///  Note:
+    ///     It is permissible for pv and spv to be the same array.
+    ///
+    ///  Called:
+    ///     iauSxp       multiply p-vector by scalar
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    pub fn pvvector_multiply_two_scalar(s1: f64, s2: f64, pv: &PVvector) -> PVvector {
+        [
+            pvector_multiply_scalar(s1, &pv[0]),
+            pvector_multiply_scalar(s2, &pv[1]),
+        ]
     }
-    pub fn pvvector_update() {
-        todo!();
+    ///  Update a pv-vector.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     dt       double           time interval
+    ///     pv       double[2][3]     pv-vector
+    ///
+    ///  Returned:
+    ///     upv      double[2][3]     p updated, v unchanged
+    ///
+    ///  Notes:
+    ///
+    ///  1) "Update" means "refer the position component of the vector
+    ///     to a new date dt time units from the existing date".
+    ///
+    ///  2) The time units of dt must match those of the velocity.
+    ///
+    ///  3) It is permissible for pv and upv to be the same array.
+    ///
+    ///  Called:
+    ///     iauPpsp      p-vector plus scaled p-vector
+    ///     iauCp        copy p-vector
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    pub fn pvvector_update(dt: f64, pv: PVvector) -> PVvector {
+        [pvector_plus_scaled_pvector(&pv[0], dt, &pv[1]), pv[1]]
     }
-    pub fn pvvector_update_discard_velocity() {
-        todo!();
+
+    ///  Update a pv-vector, discarding the velocity component.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     dt       double            time interval
+    ///     pv       double[2][3]      pv-vector
+    ///
+    ///  Returned:
+    ///     p        double[3]         p-vector
+    ///
+    ///  Notes:
+    ///
+    ///  1) "Update" means "refer the position component of the vector to a
+    ///     new date dt time units from the existing date".
+    ///
+    ///  2) The time units of dt must match those of the velocity.
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    pub fn pvvector_update_discard_velocity(dt: f64, pv: &PVvector) -> Pvector {
+        [
+            pv[0][0] + dt * pv[1][0],
+            pv[0][1] + dt * pv[1][1],
+            pv[0][2] + dt * pv[1][2],
+        ]
     }
 
     #[cfg(test)]
     mod tests {
+        use crate::vml::pvrm::initialize::zero_pvector;
         use crate::vml::pvvec::initialize::zero_pvvector;
         use assert_approx_eq::assert_approx_eq;
 
@@ -775,22 +886,55 @@ pub mod pvvector_ops {
         // t_sofa.c t_sxpv
         #[test]
         fn test_sxpv() {
-            todo!();
+            let s = 2.0;
+            let pv = [[0.3, 1.2, -2.5], [0.5, 3.2, -0.7]];
+
+            let spv = pvvector_multiply_scalar(s, &pv);
+            assert_eq!(spv, [[0.6, 2.4, -5.0], [1.0, 6.4, -1.4]]);
         }
 
         #[test]
         fn test_sxpv_parity() {
-            todo!()
+            use rsofa::iauSxpv;
+            let s = 2.0;
+            let mut pv = [[0.3, 1.2, -2.5], [0.5, 3.2, -0.7]];
+
+            let spv = pvvector_multiply_scalar(s, &pv);
+            let mut spv_iau = zero_pvvector();
+            unsafe {
+                iauSxpv(s, pv.as_mut_ptr(), spv_iau.as_mut_ptr());
+            }
+            assert_eq!(spv, spv_iau);
         }
         // t_sofa.c t_s2xpv
         #[test]
         fn test_s2xpv() {
-            todo!();
+            let s1 = 2.0;
+            let s2 = 3.0;
+            let pv = [[0.3, 1.2, -2.5], [0.5, 2.3, -0.4]];
+            let spv = pvvector_multiply_two_scalar(s1, s2, &pv);
+            assert_approx_eq!(spv[0][0], 0.6, 1e-12);
+            assert_approx_eq!(spv[0][1], 2.4, 1e-12);
+            assert_approx_eq!(spv[0][2], -5.0, 1e-12);
+
+            assert_approx_eq!(spv[1][0], 1.5, 1e-12);
+            assert_approx_eq!(spv[1][1], 6.9, 1e-12);
+            assert_approx_eq!(spv[1][2], -1.2, 1e-12);
         }
 
         #[test]
         fn test_s2xpv_parity() {
-            todo!()
+            use rsofa::iauS2xpv;
+            let s1 = 2.0;
+            let s2 = 3.0;
+            let mut pv = [[0.3, 1.2, -2.5], [0.5, 2.3, -0.4]];
+            let spv = pvvector_multiply_two_scalar(s1, s2, &pv);
+
+            let mut spv_iau = zero_pvvector();
+            unsafe {
+                iauS2xpv(s1, s2, pv.as_mut_ptr(), spv_iau.as_mut_ptr());
+            }
+            assert_eq!(spv, spv_iau);
         }
 
         // t_sofa.c t_pvppv
@@ -824,22 +968,93 @@ pub mod pvvector_ops {
         // t_sofa.c t_pvu
         #[test]
         fn test_pvu() {
-            todo!();
+            let pv = [
+                [
+                    126668.5912743160734,
+                    2136.792716839935565,
+                    -245251.2339876830229,
+                ],
+                [
+                    -0.4051854035740713039e-2,
+                    -0.6253919754866175788e-2,
+                    0.1189353719774107615e-1,
+                ],
+            ];
+            let upv = pvvector_update(2920.0, pv);
+            assert_approx_eq!(upv[0][0], 126656.7598605317105, 1e-6);
+            assert_approx_eq!(upv[0][1], 2118.531271155726332, 1e-8);
+            assert_approx_eq!(upv[0][2], -245216.5048590656190, 1e-6);
+
+            assert_approx_eq!(upv[1][0], -0.4051854035740713039e-2, 1e-12);
+            assert_approx_eq!(upv[1][1], -0.6253919754866175788e-2, 1e-12);
+            assert_approx_eq!(upv[1][2], 0.1189353719774107615e-1, 1e-12);
         }
 
         #[test]
         fn test_pvu_parity() {
-            todo!()
+            use rsofa::iauPvu;
+            let mut pv = [
+                [
+                    126668.5912743160734,
+                    2136.792716839935565,
+                    -245251.2339876830229,
+                ],
+                [
+                    -0.4051854035740713039e-2,
+                    -0.6253919754866175788e-2,
+                    0.1189353719774107615e-1,
+                ],
+            ];
+            let upv = pvvector_update(2920.0, pv);
+
+            let mut upv_iau = zero_pvvector();
+            unsafe {
+                iauPvu(2920.0, pv.as_mut_ptr(), upv_iau.as_mut_ptr());
+            }
+            assert_eq!(upv, upv_iau);
         }
         // t_sofa.c t_pvup
         #[test]
         fn test_pvup() {
-            todo!();
+            let pv = [
+                [
+                    126668.5912743160734,
+                    2136.792716839935565,
+                    -245251.2339876830229,
+                ],
+                [
+                    -0.4051854035740713039e-2,
+                    -0.6253919754866175788e-2,
+                    0.1189353719774107615e-1,
+                ],
+            ];
+            let p = pvvector_update_discard_velocity(2920.0, &pv);
+            assert_approx_eq!(p[0], 126656.7598605317105, 1e-6);
+            assert_approx_eq!(p[1], 2118.531271155726332, 1e-8);
+            assert_approx_eq!(p[2], -245216.5048590656190, 1e-6);
         }
 
         #[test]
         fn test_pvup_parity() {
-            todo!()
+            use rsofa::iauPvup;
+            let mut pv = [
+                [
+                    126668.5912743160734,
+                    2136.792716839935565,
+                    -245251.2339876830229,
+                ],
+                [
+                    -0.4051854035740713039e-2,
+                    -0.6253919754866175788e-2,
+                    0.1189353719774107615e-1,
+                ],
+            ];
+            let p = pvvector_update_discard_velocity(2920.0, &pv);
+            let mut p_iau = zero_pvector();
+            unsafe {
+                iauPvup(2920.0, pv.as_mut_ptr(), p_iau.as_mut_ptr());
+            }
+            assert_eq!(p, p_iau);
         }
     }
 }
