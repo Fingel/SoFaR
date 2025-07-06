@@ -112,3 +112,7 @@ pub use vml::pvvec::pvvector_ops::pvvector_multiply_two_scalar as s2xpv;
 pub use vml::pvvec::pvvector_ops::pvvector_plus_pvvector as pvppv;
 pub use vml::pvvec::pvvector_ops::pvvector_update as pvu;
 pub use vml::pvvec::pvvector_ops::pvvector_update_discard_velocity as pvup;
+
+// Matrix-vector products
+pub use vml::pvvec::matrix_vector_products::rmatrix_multiply_pvvector as rxpv;
+pub use vml::pvvec::matrix_vector_products::rmatrix_multiply_pvvector_transpose as trxpv;

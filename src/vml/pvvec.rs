@@ -1058,3 +1058,155 @@ pub mod pvvector_ops {
         }
     }
 }
+
+///Matrix-vector products
+///
+/// - rmatrix_multiply_pvvector (RXPV)      product of r-matrix and pv-vector
+/// - rmatrix_multiply_pvvector_transpose (TRXPV)     product of transpose of r-matrix and pv-vector
+pub mod matrix_vector_products {
+    use crate::vml::pvrm::matrix_ops::transpose_rmatrix;
+    use crate::vml::pvrm::matrix_vec_products::rmatrix_pvector_product;
+    use crate::{PVvector, Rmatrix};
+
+    ///  Multiply a pv-vector by an r-matrix.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     r        double[3][3]    r-matrix
+    ///     pv       double[2][3]    pv-vector
+    ///
+    ///  Returned:
+    ///     rpv      double[2][3]    r * pv
+    ///
+    ///  Notes:
+    ///
+    ///  1) The algorithm is for the simple case where the r-matrix r is not
+    ///     a function of time.  The case where r is a function of time leads
+    ///     to an additional velocity component equal to the product of the
+    ///     derivative of r and the position vector.
+    ///
+    ///  2) It is permissible for pv and rpv to be the same array.
+    ///
+    ///  Called:
+    ///     iauRxp       product of r-matrix and p-vector
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    pub fn rmatrix_multiply_pvvector(r: &Rmatrix, pv: &PVvector) -> PVvector {
+        [
+            rmatrix_pvector_product(r, &pv[0]),
+            rmatrix_pvector_product(r, &pv[1]),
+        ]
+    }
+
+    ///  Multiply a pv-vector by the transpose of an r-matrix.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     r        double[3][3]    r-matrix
+    ///     pv       double[2][3]    pv-vector
+    ///
+    ///  Returned:
+    ///     trpv     double[2][3]    r^T * pv
+    ///
+    ///  Notes:
+    ///
+    ///  1) The algorithm is for the simple case where the r-matrix r is not
+    ///     a function of time.  The case where r is a function of time leads
+    ///     to an additional velocity component equal to the product of the
+    ///     derivative of the transpose of r and the position vector.
+    ///
+    ///  2) It is permissible for pv and rpv to be the same array.
+    ///
+    ///  Called:
+    ///     iauTr        transpose r-matrix
+    ///     iauRxpv      product of r-matrix and pv-vector
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    pub fn rmatrix_multiply_pvvector_transpose(r: &Rmatrix, pv: &PVvector) -> PVvector {
+        // Transpose of matrix r.
+        let tr = transpose_rmatrix(r);
+
+        // Matrix tr * vector pv -> vector trpv.
+        rmatrix_multiply_pvvector(&tr, pv)
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use crate::vml::pvvec::initialize::zero_pvvector;
+        use assert_approx_eq::assert_approx_eq;
+
+        use super::*;
+
+        /// t_sofa.c t_rxpv
+        #[test]
+        fn test_rxpv() {
+            let r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
+            let pv = [[0.2, 1.5, 0.1], [1.5, 0.2, 0.1]];
+
+            let rpv = rmatrix_multiply_pvvector(&r, &pv);
+            assert_approx_eq!(rpv[0][0], 5.1, 1e-12);
+            assert_approx_eq!(rpv[1][0], 3.8, 1e-12);
+
+            assert_approx_eq!(rpv[0][1], 3.9, 1e-12);
+            assert_approx_eq!(rpv[1][1], 5.2, 1e-12);
+
+            assert_approx_eq!(rpv[0][2], 7.1, 1e-12);
+            assert_approx_eq!(rpv[1][2], 5.8, 1e-12);
+        }
+
+        #[test]
+        fn test_rxpv_parity() {
+            use rsofa::iauRxpv;
+            let mut r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
+            let mut pv = [[0.2, 1.5, 0.1], [1.5, 0.2, 0.1]];
+
+            let rpv = rmatrix_multiply_pvvector(&r, &pv);
+            let mut rpv_iau = zero_pvvector();
+            unsafe {
+                iauRxpv(r.as_mut_ptr(), pv.as_mut_ptr(), rpv_iau.as_mut_ptr());
+            }
+            assert_eq!(rpv, rpv_iau);
+        }
+
+        /// t_sofa.c t_trxpv
+        #[test]
+        fn test_trxpv() {
+            let r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
+            let pv = [[0.2, 1.5, 0.1], [1.5, 0.2, 0.1]];
+            let trpv = rmatrix_multiply_pvvector_transpose(&r, &pv);
+            assert_approx_eq!(trpv[0][0], 5.2, 1e-12);
+            assert_approx_eq!(trpv[0][1], 4.0, 1e-12);
+            assert_approx_eq!(trpv[0][2], 5.4, 1e-12);
+
+            assert_approx_eq!(trpv[1][0], 3.9, 1e-12);
+            assert_approx_eq!(trpv[1][1], 5.3, 1e-12);
+            assert_approx_eq!(trpv[1][2], 4.1, 1e-12);
+        }
+
+        #[test]
+        fn test_trxpv_parity() {
+            use rsofa::iauTrxpv;
+            let mut r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
+            let mut pv = [[0.2, 1.5, 0.1], [1.5, 0.2, 0.1]];
+            let trpv = rmatrix_multiply_pvvector_transpose(&r, &pv);
+
+            let mut trpv_iau = zero_pvvector();
+            unsafe {
+                iauTrxpv(r.as_mut_ptr(), pv.as_mut_ptr(), trpv_iau.as_mut_ptr());
+            }
+            assert_eq!(trpv, trpv_iau);
+        }
+    }
+}
