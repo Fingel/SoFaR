@@ -13,6 +13,10 @@ type Pvector = [f64; 3];
 ///and in fact work on any 3x3 matrix.
 type Rmatrix = [[f64; 3]; 3];
 
+///"Position/velocity" or "pv" vectors have dimensions (3,2) in Fortran
+///and [2][3] in C.
+type PVvector = [[f64; 3]; 2];
+
 //TODO: Remove this in favor of round() as it compiles down to
 // a single instruction on x86_64: ROUNDSD
 /// Round to nearest whole number (double)
@@ -35,14 +39,16 @@ fn dint(x: f64) -> f64 {
     if x < 0.0 { x.ceil() } else { x.floor() }
 }
 
+// Angles
 // Angle conversions
 pub use vml::angles::to_sexagesimal::days_to_hms as d2tf;
 pub use vml::angles::to_sexagesimal::radians_to_hms as a2tf;
 
+// Pvectors and Rmatrices
 // Initialize
-pub use vml::pvrm::initialize::identity_r_matrix as ir;
-pub use vml::pvrm::initialize::zero_p_vector as zp;
-pub use vml::pvrm::initialize::zero_r_matrix as zr;
+pub use vml::pvrm::initialize::identity_rmatrix as ir;
+pub use vml::pvrm::initialize::zero_pvector as zp;
+pub use vml::pvrm::initialize::zero_rmatrix as zr;
 
 // Rotations
 pub use vml::pvrm::rotations::rotate_rmatrix_about_x as rx;
@@ -51,7 +57,7 @@ pub use vml::pvrm::rotations::rotate_rmatrix_about_z as rz;
 
 // Spherical/Cartesian conversions
 pub use vml::pvrm::sphere_cart_conv::p_vector_to_spherical as p2s;
-pub use vml::pvrm::sphere_cart_conv::spherical_to_p_vector as s2p;
+pub use vml::pvrm::sphere_cart_conv::spherical_to_pvector as s2p;
 pub use vml::pvrm::sphere_cart_conv::spherical_to_unit_vector as s2c;
 pub use vml::pvrm::sphere_cart_conv::unit_vector_to_spherical as c2s;
 
@@ -82,3 +88,7 @@ pub use vml::pvrm::sep_position_angle::position_angle_from_spherical as pas;
 // Rotation vectors
 pub use vml::pvrm::rotation_vectors::rmatrix_to_rvector as rm2v;
 pub use vml::pvrm::rotation_vectors::rvector_to_rmatrix as rv2m;
+
+// PV Vectors
+// Initialize
+pub use vml::pvvec::initialize::zero_pvvector as zpv;

@@ -1,9 +1,9 @@
 //! Operations involving p-vectors and r-matrices
 
 ///   Initialize
-///   - zero_p_vector (ZP)        zero p-vector
-///   - zero_r_matrix (ZR)        initialize r-matrix to null
-///   - identity_r_matrix (IR)        initialize r-matrix to identity
+///   - zero_pvector (ZP)        zero p-vector
+///   - zero_rmatrix (ZR)        initialize r-matrix to null
+///   - identity_rmatrix (IR)        initialize r-matrix to identity
 pub mod initialize {
     use crate::{Pvector, Rmatrix};
 
@@ -18,7 +18,7 @@ pub mod initialize {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn zero_p_vector() -> Pvector {
+    pub fn zero_pvector() -> Pvector {
         [0.0, 0.0, 0.0]
     }
 
@@ -33,7 +33,7 @@ pub mod initialize {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn zero_r_matrix() -> Rmatrix {
+    pub fn zero_rmatrix() -> Rmatrix {
         [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
     }
 
@@ -48,7 +48,7 @@ pub mod initialize {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn identity_r_matrix() -> Rmatrix {
+    pub fn identity_rmatrix() -> Rmatrix {
         [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
     }
 
@@ -61,7 +61,7 @@ pub mod initialize {
         #[allow(unused_assignments)]
         fn test_zp() {
             let mut p = [0.3, 1.2, -2.5];
-            p = zero_p_vector();
+            p = zero_pvector();
             assert_eq!(p, [0.0, 0.0, 0.0]);
         }
 
@@ -70,7 +70,7 @@ pub mod initialize {
         fn test_zp_parity() {
             use rsofa::iauZp;
             let mut p = [0.3, 1.2, -2.5];
-            p = zero_p_vector();
+            p = zero_pvector();
 
             let mut p_iau = [0.3, 1.2, -2.5];
             unsafe {
@@ -84,7 +84,7 @@ pub mod initialize {
         #[allow(unused_assignments)]
         fn test_zr() {
             let mut r = [[2.0, 3.0, 3.0], [3.0, 2.0, 4.0], [2.0, 3.0, 5.0]];
-            r = zero_r_matrix();
+            r = zero_rmatrix();
             assert_eq!(r, [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]);
         }
 
@@ -93,7 +93,7 @@ pub mod initialize {
         fn test_zr_parity() {
             use rsofa::iauZr;
             let mut r = [[2.0, 3.0, 3.0], [3.0, 2.0, 4.0], [2.0, 3.0, 5.0]];
-            r = zero_r_matrix();
+            r = zero_rmatrix();
 
             let mut r_iau = [[2.0, 3.0, 3.0], [3.0, 2.0, 4.0], [2.0, 3.0, 5.0]];
             unsafe {
@@ -107,7 +107,7 @@ pub mod initialize {
         #[allow(unused_assignments)]
         fn test_ir() {
             let mut r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
-            r = identity_r_matrix();
+            r = identity_rmatrix();
             assert_eq!(r, [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]);
         }
 
@@ -116,7 +116,7 @@ pub mod initialize {
         fn test_ir_parity() {
             use rsofa::iauIr;
             let mut r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
-            r = identity_r_matrix();
+            r = identity_rmatrix();
 
             let mut r_iau = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
             unsafe {
@@ -192,13 +192,13 @@ pub mod copy {
 
         #[test]
         fn test_cp_parity() {
-            use crate::vml::pvrm::initialize::zero_p_vector;
+            use crate::vml::pvrm::initialize::zero_pvector;
             use rsofa::iauCp;
             let p = [0.3, 1.2, -2.5];
             let c = cp(&p);
 
             let mut p_iau = [0.3, 1.2, -2.5];
-            let mut c_iau = zero_p_vector();
+            let mut c_iau = zero_pvector();
             unsafe {
                 iauCp(p_iau.as_mut_ptr(), c_iau.as_mut_ptr());
             }
@@ -216,13 +216,13 @@ pub mod copy {
 
         #[test]
         fn test_cr_parity() {
-            use crate::vml::pvrm::initialize::zero_r_matrix;
+            use crate::vml::pvrm::initialize::zero_rmatrix;
             use rsofa::iauCr;
             let r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
             let c = cr(&r);
 
             let mut r_iau = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
-            let mut c_iau = zero_r_matrix();
+            let mut c_iau = zero_rmatrix();
             unsafe {
                 iauCr(r_iau.as_mut_ptr(), c_iau.as_mut_ptr());
             }
@@ -484,7 +484,7 @@ pub mod rotations {
 /// Spherical/Cartesian conversions
 /// - spherical_to_unit_vector (S2C)       spherical to unit vector
 /// - unit_vector_to_spherical (C2S)       unit vector to spherical
-/// - spherical_to_p_vector (S2P)       spherical to p-vector
+/// - spherical_to_pvector (S2P)       spherical to p-vector
 /// - p_vector_to_spherical (P2S)       p-vector to spherical
 pub mod sphere_cart_conv {
     use crate::Pvector;
@@ -563,7 +563,7 @@ pub mod sphere_cart_conv {
     ///
     /// Derived from the SOFA library. See IAU SOFA terms and conditions
     /// at https://www.iausofa.org/tandc.html
-    pub fn spherical_to_p_vector(theta: f64, phi: f64, r: f64) -> Pvector {
+    pub fn spherical_to_pvector(theta: f64, phi: f64, r: f64) -> Pvector {
         let u = spherical_to_unit_vector(theta, phi);
         pvector_multiply_scalar(r, &u)
     }
@@ -617,13 +617,13 @@ pub mod sphere_cart_conv {
 
         #[test]
         fn test_s2c_parity() {
-            use crate::vml::pvrm::initialize::zero_p_vector;
+            use crate::vml::pvrm::initialize::zero_pvector;
             use rsofa::iauS2c;
             let theta = 3.0123;
             let phi = -0.999;
             let c = spherical_to_unit_vector(theta, phi);
 
-            let mut c_iau = zero_p_vector();
+            let mut c_iau = zero_pvector();
             unsafe {
                 iauS2c(theta, phi, c_iau.as_mut_ptr());
             }
@@ -657,7 +657,7 @@ pub mod sphere_cart_conv {
         /// t_sofa.c t_s2p
         #[test]
         fn test_s2p() {
-            let p = spherical_to_p_vector(-3.21, 0.123, 0.456);
+            let p = spherical_to_pvector(-3.21, 0.123, 0.456);
             assert_approx_eq!(p[0], -0.4514964673880165228, 1e-12);
             assert_approx_eq!(p[1], 0.0309339427734258688, 1e-12);
             assert_approx_eq!(p[2], 0.0559466810510877933, 1e-12);
@@ -665,14 +665,14 @@ pub mod sphere_cart_conv {
 
         #[test]
         fn test_s2p_parity() {
-            use crate::vml::pvrm::initialize::zero_p_vector;
+            use crate::vml::pvrm::initialize::zero_pvector;
             use rsofa::iauS2p;
             let theta = -3.21;
             let phi = 0.123;
             let r = 0.456;
-            let p = spherical_to_p_vector(theta, phi, r);
+            let p = spherical_to_pvector(theta, phi, r);
 
-            let mut p_iau = zero_p_vector();
+            let mut p_iau = zero_pvector();
             unsafe {
                 iauS2p(theta, phi, r, p_iau.as_mut_ptr());
             }
@@ -720,7 +720,7 @@ pub mod sphere_cart_conv {
 ///- pvector_multiply_scalar (SXP)       multiply p-vector by scalar
 pub mod vec_ops {
     use crate::Pvector;
-    use crate::vml::pvrm::initialize::zero_p_vector;
+    use crate::vml::pvrm::initialize::zero_pvector;
     //TODO: SIMD would probably provide gains for this module
 
     ///  P-vector addition.
@@ -896,7 +896,7 @@ pub mod vec_ops {
         let w = pvector_modulus(p);
         if w == 0.0 {
             // Null vector.
-            let u = zero_p_vector();
+            let u = zero_pvector();
             (w, u)
         } else {
             // Unit vector.
@@ -949,7 +949,7 @@ pub mod vec_ops {
             let mut b = [1.0, 3.0, 4.0];
             let apb = pvector_plus_pvector(&a, &b);
 
-            let mut apb_iau = zero_p_vector();
+            let mut apb_iau = zero_pvector();
             unsafe {
                 iauPpp(a.as_mut_ptr(), b.as_mut_ptr(), apb_iau.as_mut_ptr());
             }
@@ -972,7 +972,7 @@ pub mod vec_ops {
             let mut b = [1.0, 3.0, 4.0];
             let amb = pvector_minus_pvector(&a, &b);
 
-            let mut amb_iau = zero_p_vector();
+            let mut amb_iau = zero_pvector();
             unsafe {
                 iauPmp(a.as_mut_ptr(), b.as_mut_ptr(), amb_iau.as_mut_ptr());
             }
@@ -997,7 +997,7 @@ pub mod vec_ops {
             let mut b = [1.0, 3.0, 4.0];
             let apsb = pvector_plus_scaled_pvector(&a, s, &b);
 
-            let mut apsb_iau = zero_p_vector();
+            let mut apsb_iau = zero_pvector();
             unsafe {
                 iauPpsp(a.as_mut_ptr(), s, b.as_mut_ptr(), apsb_iau.as_mut_ptr());
             }
@@ -1040,7 +1040,7 @@ pub mod vec_ops {
             let mut b = [1.0, 3.0, 4.0];
             let axb = pvector_cross_product(&a, &b);
 
-            let mut axb_iau = zero_p_vector();
+            let mut axb_iau = zero_pvector();
             unsafe { iauPxp(a.as_mut_ptr(), b.as_mut_ptr(), axb_iau.as_mut_ptr()) };
             assert_eq!(axb, axb_iau);
         }
@@ -1082,7 +1082,7 @@ pub mod vec_ops {
             let (r, u) = pvector_normalize(&p);
 
             let mut r_iau = 0.0;
-            let mut u_iau = zero_p_vector();
+            let mut u_iau = zero_pvector();
 
             unsafe {
                 iauPn(p.as_mut_ptr(), &mut r_iau, u_iau.as_mut_ptr());
@@ -1115,7 +1115,7 @@ pub mod vec_ops {
             let mut p = [0.3, 1.2, -2.5];
             let sp = pvector_multiply_scalar(s, &p);
 
-            let mut sp_iau = zero_p_vector();
+            let mut sp_iau = zero_pvector();
             unsafe {
                 iauSxp(s, p.as_mut_ptr(), sp_iau.as_mut_ptr());
             }
@@ -1130,7 +1130,7 @@ pub mod vec_ops {
 /// - transpose_rmatrix (TR)        transpose r-matrix
 pub mod matrix_ops {
     use crate::Rmatrix;
-    use crate::vml::pvrm::initialize::zero_r_matrix;
+    use crate::vml::pvrm::initialize::zero_rmatrix;
 
     // TODO: SIMD
     ///  Multiply two r-matrices.
@@ -1158,7 +1158,7 @@ pub mod matrix_ops {
     #[allow(clippy::needless_range_loop)]
     pub fn rmatrix_multiply(a: &Rmatrix, b: &Rmatrix) -> Rmatrix {
         //TODO: naive mmultiply implementation
-        let mut atb = zero_r_matrix();
+        let mut atb = zero_rmatrix();
         let mut w;
         for i in 0..3 {
             for j in 0..3 {
@@ -1194,7 +1194,7 @@ pub mod matrix_ops {
     /// at https://www.iausofa.org/tandc.html
     #[allow(clippy::needless_range_loop)]
     pub fn transpose_rmatrix(r: &Rmatrix) -> Rmatrix {
-        let mut tr = zero_r_matrix();
+        let mut tr = zero_rmatrix();
         for i in 0..3 {
             for j in 0..3 {
                 tr[i][j] = r[j][i];
@@ -1206,7 +1206,7 @@ pub mod matrix_ops {
     #[cfg(test)]
     mod tests {
         use super::*;
-        use crate::vml::pvrm::initialize::zero_r_matrix;
+        use crate::vml::pvrm::initialize::zero_rmatrix;
 
         /// t_sofa.c t_rxr
         #[test]
@@ -1224,7 +1224,7 @@ pub mod matrix_ops {
             let mut a = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
             let mut b = [[1.0, 2.0, 2.0], [4.0, 1.0, 1.0], [3.0, 0.0, 1.0]];
             let atb = rmatrix_multiply(&a, &b);
-            let mut atb_iau = zero_r_matrix();
+            let mut atb_iau = zero_rmatrix();
             unsafe {
                 iauRxr(a.as_mut_ptr(), b.as_mut_ptr(), atb_iau.as_mut_ptr());
             }
@@ -1246,7 +1246,7 @@ pub mod matrix_ops {
             let mut r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
             // let rt = [[2.0, 3.0, 3.0], [3.0, 2.0, 4.0], [2.0, 3.0, 5.0]];
             let rt = transpose_rmatrix(&r);
-            let mut rt_iau = zero_r_matrix();
+            let mut rt_iau = zero_rmatrix();
             unsafe {
                 iauTr(r.as_mut_ptr(), rt_iau.as_mut_ptr());
             }
@@ -1259,7 +1259,7 @@ pub mod matrix_ops {
 /// - rmatrix_pvector_product (RXP)       product of r-matrix and p-vector
 /// - transpose_rmatrix_pvector_product (TRXP)      product of transpose of r-matrix and p-vector
 pub mod matrix_vec_products {
-    use crate::vml::pvrm::initialize::zero_p_vector;
+    use crate::vml::pvrm::initialize::zero_pvector;
     use crate::vml::pvrm::matrix_ops::transpose_rmatrix;
     use crate::{Pvector, Rmatrix};
 
@@ -1288,7 +1288,7 @@ pub mod matrix_vec_products {
     pub fn rmatrix_pvector_product(r: &Rmatrix, p: &Pvector) -> Pvector {
         //TODO No need for mut here
         let mut w;
-        let mut rp = zero_p_vector();
+        let mut rp = zero_pvector();
         for j in 0..3 {
             w = 0.0;
             for i in 0..3 {
@@ -1353,7 +1353,7 @@ pub mod matrix_vec_products {
             let mut p = [0.2, 1.5, 0.1];
             let rp = rmatrix_pvector_product(&r, &p);
 
-            let mut rp_iau = zero_p_vector();
+            let mut rp_iau = zero_pvector();
             unsafe {
                 iauRxp(r.as_mut_ptr(), p.as_mut_ptr(), rp_iau.as_mut_ptr());
             }
@@ -1377,7 +1377,7 @@ pub mod matrix_vec_products {
             let mut r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
             let mut p = [0.2, 1.5, 0.1];
             let trp = transpose_rmatrix_pvector_product(&r, &p);
-            let mut trp_iau = zero_p_vector();
+            let mut trp_iau = zero_pvector();
             unsafe {
                 iauTrxp(r.as_mut_ptr(), p.as_mut_ptr(), trp_iau.as_mut_ptr());
             }
@@ -1395,7 +1395,7 @@ pub mod sep_position_angle {
     use crate::{
         Pvector,
         vml::pvrm::{
-            initialize::zero_p_vector,
+            initialize::zero_pvector,
             sphere_cart_conv::spherical_to_unit_vector,
             vec_ops::{
                 pvector_cross_product, pvector_dot_product, pvector_minus_pvector, pvector_modulus,
@@ -1520,7 +1520,7 @@ pub mod sep_position_angle {
     pub fn position_angle_from_pvector(a: &Pvector, b: &Pvector) -> f64 {
         let st: f64;
         let mut ct: f64;
-        let mut eta = zero_p_vector();
+        let mut eta = zero_pvector();
 
         // Modulus and direction of the a vector.
         let (am, au) = pvector_normalize(a);
@@ -1706,7 +1706,7 @@ pub mod sep_position_angle {
 /// - rvector_to_rmatrix (RV2M)      r-vector to r-matrix
 /// - rmatrix_to_rvector (RM2V)      r-matrix to r-vector
 pub mod rotation_vectors {
-    use crate::{Pvector, Rmatrix, vml::pvrm::initialize::zero_r_matrix};
+    use crate::{Pvector, Rmatrix, vml::pvrm::initialize::zero_rmatrix};
     ///  Form the r-matrix corresponding to a given r-vector.
     ///
     ///  Given:
@@ -1751,7 +1751,7 @@ pub mod rotation_vectors {
         }
 
         // Form the rotation matrix.
-        let mut r = zero_r_matrix();
+        let mut r = zero_rmatrix();
         r[0][0] = x * x * f + c;
         r[0][1] = x * y * f + z * s;
         r[0][2] = x * z * f - y * s;
@@ -1841,7 +1841,7 @@ pub mod rotation_vectors {
             let mut w = [0.0, 1.41371669, -1.88495559];
             let r = rvector_to_rmatrix(&w);
 
-            let mut iau_r = zero_r_matrix();
+            let mut iau_r = zero_rmatrix();
             unsafe {
                 iauRv2m(w.as_mut_ptr(), iau_r.as_mut_ptr());
             }
