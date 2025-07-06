@@ -101,3 +101,14 @@ pub use vml::pvvec::copy_extend_extract::discard_velocity_pvvector as pv2p;
 // Sphereical/Cartesian conversions
 pub use vml::pvvec::sphere_cart_conv::pvvector_to_spherical as pv2s;
 pub use vml::pvvec::sphere_cart_conv::spherical_to_pvvector as s2pv;
+
+// Operations on pv-vectors
+pub use vml::pvvec::pvvector_ops::pvvector_cross_pvvector as pvxpv;
+pub use vml::pvvec::pvvector_ops::pvvector_dot_pvvector as pvdpv;
+pub use vml::pvvec::pvvector_ops::pvvector_minus_pvvector as pvmpv;
+pub use vml::pvvec::pvvector_ops::pvvector_modulus as pvm;
+pub use vml::pvvec::pvvector_ops::pvvector_multiply_scalar as sxpv;
+pub use vml::pvvec::pvvector_ops::pvvector_multiply_two_scalar as s2xpv;
+pub use vml::pvvec::pvvector_ops::pvvector_plus_pvvector as pvppv;
+pub use vml::pvvec::pvvector_ops::pvvector_update as pvu;
+pub use vml::pvvec::pvvector_ops::pvvector_update_discard_velocity as pvup;

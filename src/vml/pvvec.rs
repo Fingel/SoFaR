@@ -452,3 +452,394 @@ pub mod sphere_cart_conv {
         }
     }
 }
+///Operations on pv-vectors
+///
+/// - pvvector_plus_pvvector (PVPPV)     pv-vector plus pv-vector
+/// - pvvector_minus_pvvector (PVMPV)     pv-vector minus pv-vector
+/// - pvvector_dot_pvvector (PVDPV)     inner (=scalar=dot) product of two pv-vectors
+/// - pvvector_cross_pvvector (PVXPV)     outer (=vector=cross) product of two pv-vectors
+/// - pvvector_modulus (PVM)       modulus of pv-vector
+/// - pvvector_multiply_scalar (SXPV)      multiply pv-vector by scalar
+/// - pvvector_multiply_two_scalar (S2XPV)     multiply pv-vector by two scalars
+/// - pvvector_update (PVU)       update pv-vector
+/// - pvvector_update_discard_velocity (PVUP)      update pv-vector discarding velocity
+pub mod pvvector_ops {
+    use crate::vml::pvrm::vec_ops::{
+        pvector_cross_product, pvector_dot_product, pvector_minus_pvector, pvector_modulus,
+        pvector_plus_pvector,
+    };
+    use crate::{PVvector, cpv};
+
+    ///  Add one pv-vector to another.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     a        double[2][3]      first pv-vector
+    ///     b        double[2][3]      second pv-vector
+    ///
+    ///  Returned:
+    ///     apb      double[2][3]      a + b
+    ///
+    ///  Note:
+    ///     It is permissible to re-use the same array for any of the
+    ///     arguments.
+    ///
+    ///  Called:
+    ///     iauPpp       p-vector plus p-vector
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    pub fn pvvector_plus_pvvector(a: &PVvector, b: &PVvector) -> PVvector {
+        [
+            pvector_plus_pvector(&a[0], &b[0]),
+            pvector_plus_pvector(&a[1], &b[1]),
+        ]
+    }
+
+    ///  Subtract one pv-vector from another.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     a       double[2][3]      first pv-vector
+    ///     b       double[2][3]      second pv-vector
+    ///
+    ///  Returned:
+    ///     amb     double[2][3]      a - b
+    ///
+    ///  Note:
+    ///     It is permissible to re-use the same array for any of the
+    ///     arguments.
+    ///
+    ///  Called:
+    ///     iauPmp       p-vector minus p-vector
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    pub fn pvvector_minus_pvvector(a: &PVvector, b: &PVvector) -> PVvector {
+        [
+            pvector_minus_pvector(&a[0], &b[0]),
+            pvector_minus_pvector(&a[1], &b[1]),
+        ]
+    }
+
+    ///  Inner (=scalar=dot) product of two pv-vectors.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     a        double[2][3]      first pv-vector
+    ///     b        double[2][3]      second pv-vector
+    ///
+    ///  Returned:
+    ///     adb      double[2]         a . b (see note)
+    ///
+    ///  Note:
+    ///
+    ///     If the position and velocity components of the two pv-vectors are
+    ///     ( ap, av ) and ( bp, bv ), the result, a . b, is the pair of
+    ///     numbers ( ap . bp , ap . bv + av . bp ).  The two numbers are the
+    ///     dot-product of the two p-vectors and its derivative.
+    ///
+    ///  Called:
+    ///     iauPdp       scalar product of two p-vectors
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    pub fn pvvector_dot_pvvector(a: &PVvector, b: &PVvector) -> [f64; 2] {
+        // a . b = constant part of result.
+        let adb_const = pvector_dot_product(&a[0], &b[0]);
+
+        // a . bdot.
+        let adbd = pvector_dot_product(&a[0], &b[1]);
+
+        // adot . b
+        let addb = pvector_dot_product(&a[1], &b[0]);
+
+        // Velocity part of result.
+        let adb_vel = adbd + addb;
+
+        [adb_const, adb_vel]
+    }
+
+    ///  Outer (=vector=cross) product of two pv-vectors.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     a        double[2][3]      first pv-vector
+    ///     b        double[2][3]      second pv-vector
+    ///
+    ///  Returned:
+    ///     axb      double[2][3]      a x b
+    ///
+    ///  Notes:
+    ///
+    ///  1) If the position and velocity components of the two pv-vectors are
+    ///     ( ap, av ) and ( bp, bv ), the result, a x b, is the pair of
+    ///     vectors ( ap x bp, ap x bv + av x bp ).  The two vectors are the
+    ///     cross-product of the two p-vectors and its derivative.
+    ///
+    ///  2) It is permissible to re-use the same array for any of the
+    ///     arguments.
+    ///
+    ///  Called:
+    ///     iauCpv       copy pv-vector
+    ///     iauPxp       vector product of two p-vectors
+    ///     iauPpp       p-vector plus p-vector
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    pub fn pvvector_cross_pvvector(a: &PVvector, b: &PVvector) -> PVvector {
+        // Make copies of the inputs.
+        let wa = cpv(a);
+        let wb = cpv(b);
+
+        // a x b = position part of result.
+        let axb_pos = pvector_cross_product(&wa[0], &wb[0]);
+
+        // a x bdot + adot x b = velocity part of result.
+        let axbd = pvector_cross_product(&wa[0], &wb[1]);
+        let adxb = pvector_cross_product(&wa[1], &wb[0]);
+        let axb_vel = pvector_plus_pvector(&axbd, &adxb);
+
+        [axb_pos, axb_vel]
+    }
+
+    ///  Modulus of pv-vector.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     pv     double[2][3]   pv-vector
+    ///
+    ///  Returned:
+    ///     r      double         modulus of position component
+    ///     s      double         modulus of velocity component
+    ///
+    ///  Called:
+    ///     iauPm        modulus of p-vector
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    pub fn pvvector_modulus(pv: &PVvector) -> (f64, f64) {
+        // Distance
+        let r = pvector_modulus(&pv[0]);
+
+        // Speed
+        let s = pvector_modulus(&pv[1]);
+
+        (r, s)
+    }
+    pub fn pvvector_multiply_scalar() {
+        todo!();
+    }
+    pub fn pvvector_multiply_two_scalar() {
+        todo!();
+    }
+    pub fn pvvector_update() {
+        todo!();
+    }
+    pub fn pvvector_update_discard_velocity() {
+        todo!();
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use crate::vml::pvvec::initialize::zero_pvvector;
+        use assert_approx_eq::assert_approx_eq;
+
+        use super::*;
+
+        // t_sofa.c t_pvxpv
+        #[test]
+        fn test_pvxpv() {
+            let a = [[2.0, 2.0, 3.0], [6.0, 0.0, 4.0]];
+            let b = [[1.0, 3.0, 4.0], [0.0, 2.0, 8.0]];
+            let axb = pvvector_cross_pvvector(&a, &b);
+            assert_eq!(axb[0], [-1.0, -5.0, 4.0]);
+            assert_eq!(axb[1], [-2.0, -36.0, 22.0]);
+        }
+
+        #[test]
+        fn test_pvxpv_parity() {
+            use rsofa::iauPvxpv;
+            let mut a = [[2.0, 2.0, 3.0], [6.0, 0.0, 4.0]];
+            let mut b = [[1.0, 3.0, 4.0], [0.0, 2.0, 8.0]];
+            let axb = pvvector_cross_pvvector(&a, &b);
+
+            let mut axb_iau = zero_pvvector();
+            unsafe {
+                iauPvxpv(a.as_mut_ptr(), b.as_mut_ptr(), axb_iau.as_mut_ptr());
+            }
+            assert_eq!(axb, axb_iau);
+        }
+
+        // t_sofa.c t_pvdpv
+        #[test]
+        fn test_pvdpv() {
+            let a = [[2.0, 2.0, 3.0], [6.0, 0.0, 4.0]];
+            let b = [[1.0, 3.0, 4.0], [0.0, 2.0, 8.0]];
+            let adb = pvvector_dot_pvvector(&a, &b);
+            assert_eq!(adb[0], 20.0);
+            assert_eq!(adb[1], 50.0);
+        }
+
+        #[test]
+        fn test_pvdpv_parity() {
+            use rsofa::iauPvdpv;
+            let mut a = [[2.0, 2.0, 3.0], [6.0, 0.0, 4.0]];
+            let mut b = [[1.0, 3.0, 4.0], [0.0, 2.0, 8.0]];
+            let adb = pvvector_dot_pvvector(&a, &b);
+
+            let mut adb_iau = [0.0; 2];
+            unsafe {
+                iauPvdpv(a.as_mut_ptr(), b.as_mut_ptr(), adb_iau.as_mut_ptr());
+            }
+            assert_eq!(adb, adb_iau);
+        }
+
+        // t_sofa.c t_pvmpv
+        #[test]
+        fn test_pvmpv() {
+            let a = [[2.0, 2.0, 3.0], [5.0, 6.0, 3.0]];
+            let b = [[1.0, 3.0, 4.0], [3.0, 2.0, 1.0]];
+            let amb = pvvector_minus_pvvector(&a, &b);
+            assert_eq!(amb[0][0], 1.0);
+            assert_eq!(amb[0][1], -1.0);
+            assert_eq!(amb[0][2], -1.0);
+
+            assert_eq!(amb[1][0], 2.0);
+            assert_eq!(amb[1][1], 4.0);
+            assert_eq!(amb[1][2], 2.0);
+        }
+
+        #[test]
+        fn test_pvmpv_parity() {
+            use rsofa::iauPvmpv;
+            let mut a = [[2.0, 2.0, 3.0], [5.0, 6.0, 3.0]];
+            let mut b = [[1.0, 3.0, 4.0], [3.0, 2.0, 1.0]];
+            let amb = pvvector_minus_pvvector(&a, &b);
+
+            let mut amb_iau = zero_pvvector();
+            unsafe {
+                iauPvmpv(a.as_mut_ptr(), b.as_mut_ptr(), amb_iau.as_mut_ptr());
+            }
+            assert_eq!(amb, amb_iau);
+        }
+
+        // t_sofa.c t_pvm
+        #[test]
+        fn test_pvm() {
+            let pv = [[0.3, 1.2, -2.5], [0.45, -0.25, 1.1]];
+            let (r, s) = pvvector_modulus(&pv);
+            assert_approx_eq!(r, 2.789265136196270604, 1e-12);
+            assert_approx_eq!(s, 1.214495780149111922, 1e-12);
+        }
+
+        #[test]
+        fn test_pvm_parity() {
+            use rsofa::iauPvm;
+            let mut pv = [[0.3, 1.2, -2.5], [0.45, -0.25, 1.1]];
+            let (r, s) = pvvector_modulus(&pv);
+            let mut r_iau = 0.0;
+            let mut s_iau = 0.0;
+            unsafe {
+                iauPvm(pv.as_mut_ptr(), &mut r_iau, &mut s_iau);
+            }
+            assert_eq!(r, r_iau);
+            assert_eq!(s, s_iau);
+        }
+
+        // t_sofa.c t_sxpv
+        #[test]
+        fn test_sxpv() {
+            todo!();
+        }
+
+        #[test]
+        fn test_sxpv_parity() {
+            todo!()
+        }
+        // t_sofa.c t_s2xpv
+        #[test]
+        fn test_s2xpv() {
+            todo!();
+        }
+
+        #[test]
+        fn test_s2xpv_parity() {
+            todo!()
+        }
+
+        // t_sofa.c t_pvppv
+        #[test]
+        fn test_pvppv() {
+            let a = [[2.0, 2.0, 3.0], [5.0, 6.0, 3.0]];
+            let b = [[1.0, 3.0, 4.0], [3.0, 2.0, 1.0]];
+            let apb = pvvector_plus_pvvector(&a, &b);
+            assert_eq!(apb[0][0], 3.0);
+            assert_eq!(apb[0][1], 5.0);
+            assert_eq!(apb[0][2], 7.0);
+
+            assert_eq!(apb[1][0], 8.0);
+            assert_eq!(apb[1][1], 8.0);
+            assert_eq!(apb[1][2], 4.0);
+        }
+        #[test]
+        fn test_pvppv_parity() {
+            use rsofa::iauPvppv;
+            let mut a = [[2.0, 2.0, 3.0], [5.0, 6.0, 3.0]];
+            let mut b = [[1.0, 3.0, 4.0], [3.0, 2.0, 1.0]];
+            let apb = pvvector_plus_pvvector(&a, &b);
+
+            let mut apb_iau = zero_pvvector();
+            unsafe {
+                iauPvppv(a.as_mut_ptr(), b.as_mut_ptr(), apb_iau.as_mut_ptr());
+            }
+            assert_eq!(apb, apb_iau);
+        }
+
+        // t_sofa.c t_pvu
+        #[test]
+        fn test_pvu() {
+            todo!();
+        }
+
+        #[test]
+        fn test_pvu_parity() {
+            todo!()
+        }
+        // t_sofa.c t_pvup
+        #[test]
+        fn test_pvup() {
+            todo!();
+        }
+
+        #[test]
+        fn test_pvup_parity() {
+            todo!()
+        }
+    }
+}
