@@ -326,6 +326,20 @@ pub mod rotations {
             assert_approx_eq!(result[2][2], 3.687721683977873065, 1e-12);
         }
 
+        #[test]
+        fn test_rx_parity() {
+            use rsofa::iauRx;
+            let phi = 0.3456789;
+            let r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
+            let result = rotate_rmatrix_about_x(phi, &r);
+
+            let mut r_iau = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
+            unsafe {
+                iauRx(phi, r_iau.as_mut_ptr());
+            }
+            assert_eq!(r_iau, result);
+        }
+
         /// t_sofa.c t_ry
         #[test]
         fn test_ry() {
@@ -345,6 +359,21 @@ pub mod rotations {
             assert_approx_eq!(result[2][2], 5.381899160903798712, 1e-12);
         }
 
+        #[test]
+        fn test_ry_parity() {
+            use rsofa::iauRy;
+
+            let theta = 0.3456789;
+            let r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
+            let result = rotate_rmatrix_about_y(theta, &r);
+
+            let mut r_iau = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
+            unsafe {
+                iauRy(theta, r_iau.as_mut_ptr());
+            }
+            assert_eq!(r_iau, result);
+        }
+
         /// t_sofa.c t_rz
         #[test]
         fn test_rz() {
@@ -362,6 +391,20 @@ pub mod rotations {
             assert_approx_eq!(result[2][0], 3.0, 1e-12);
             assert_approx_eq!(result[2][1], 4.0, 1e-12);
             assert_approx_eq!(result[2][2], 5.0, 1e-12);
+        }
+
+        #[test]
+        fn test_rz_parity() {
+            use rsofa::iauRz;
+            let psi = 0.3456789;
+            let r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
+            let result = rotate_rmatrix_about_z(psi, &r);
+
+            let mut r_iau = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
+            unsafe {
+                iauRz(psi, r_iau.as_mut_ptr());
+            }
+            assert_eq!(result, r_iau);
         }
     }
 }
