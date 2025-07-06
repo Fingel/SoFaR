@@ -763,6 +763,20 @@ pub mod vec_ops {
             assert_eq!(apb, [3.0, 5.0, 7.0]);
         }
 
+        #[test]
+        fn test_ppp_parity() {
+            use rsofa::iauPpp;
+            let mut a = [2.0, 2.0, 3.0];
+            let mut b = [1.0, 3.0, 4.0];
+            let apb = pvector_plus_pvector(&a, &b);
+
+            let mut apb_iau = zero_p_vector();
+            unsafe {
+                iauPpp(a.as_mut_ptr(), b.as_mut_ptr(), apb_iau.as_mut_ptr());
+            }
+            assert_eq!(apb, apb_iau);
+        }
+
         /// t_sofa.c t_pmp
         #[test]
         fn test_pmp() {
@@ -770,6 +784,20 @@ pub mod vec_ops {
             let b = [1.0, 3.0, 4.0];
             let amb = pvector_minus_pvector(&a, &b);
             assert_eq!(amb, [1.0, -1.0, -1.0]);
+        }
+
+        #[test]
+        fn test_pmp_parity() {
+            use rsofa::iauPmp;
+            let mut a = [2.0, 2.0, 3.0];
+            let mut b = [1.0, 3.0, 4.0];
+            let amb = pvector_minus_pvector(&a, &b);
+
+            let mut amb_iau = zero_p_vector();
+            unsafe {
+                iauPmp(a.as_mut_ptr(), b.as_mut_ptr(), amb_iau.as_mut_ptr());
+            }
+            assert_eq!(amb, amb_iau);
         }
 
         /// t_sofa.c t_ppsp
@@ -782,6 +810,21 @@ pub mod vec_ops {
             assert_eq!(apsb, [7.0, 17.0, 23.0]);
         }
 
+        #[test]
+        fn test_ppsp_parity() {
+            use rsofa::iauPpsp;
+            let mut a = [2.0, 2.0, 3.0];
+            let s = 5.0;
+            let mut b = [1.0, 3.0, 4.0];
+            let apsb = pvector_plus_scaled_pvector(&a, s, &b);
+
+            let mut apsb_iau = zero_p_vector();
+            unsafe {
+                iauPpsp(a.as_mut_ptr(), s, b.as_mut_ptr(), apsb_iau.as_mut_ptr());
+            }
+            assert_eq!(apsb, apsb_iau);
+        }
+
         /// t_sofa.c t_pdp
         #[test]
         fn test_pdp() {
@@ -789,6 +832,17 @@ pub mod vec_ops {
             let b = [1.0, 3.0, 4.0];
             let apb = pvector_dot_product(&a, &b);
             assert_eq!(apb, 20.0);
+        }
+
+        #[test]
+        fn test_pdp_parity() {
+            use rsofa::iauPdp;
+            let mut a = [2.0, 2.0, 3.0];
+            let mut b = [1.0, 3.0, 4.0];
+            let apb = pvector_dot_product(&a, &b);
+
+            let iau_apb = unsafe { iauPdp(a.as_mut_ptr(), b.as_mut_ptr()) };
+            assert_eq!(apb, iau_apb);
         }
 
         /// t_sofa.c t_pxp
@@ -800,12 +854,34 @@ pub mod vec_ops {
             assert_eq!(axb, [-1.0, -5.0, 4.0]);
         }
 
+        #[test]
+        fn test_pxp_parity() {
+            use rsofa::iauPxp;
+            let mut a = [2.0, 2.0, 3.0];
+            let mut b = [1.0, 3.0, 4.0];
+            let axb = pvector_cross_product(&a, &b);
+
+            let mut axb_iau = zero_p_vector();
+            unsafe { iauPxp(a.as_mut_ptr(), b.as_mut_ptr(), axb_iau.as_mut_ptr()) };
+            assert_eq!(axb, axb_iau);
+        }
+
         /// t_sofa.c t_pm
         #[test]
         fn test_pm() {
             let p = [0.3, 1.2, -2.5];
             let r = pvector_modulus(&p);
             assert_approx_eq!(r, 2.789265136196270604, 1e-12);
+        }
+
+        #[test]
+        fn test_pm_parity() {
+            use rsofa::iauPm;
+            let mut p = [0.3, 1.2, -2.5];
+            let r = pvector_modulus(&p);
+
+            let r_iau = unsafe { iauPm(p.as_mut_ptr()) };
+            assert_eq!(r, r_iau);
         }
 
         /// t_sofa.c t_pn
@@ -818,6 +894,22 @@ pub mod vec_ops {
             assert_approx_eq!(u[0], 0.1075552109073112058, 1e-12);
             assert_approx_eq!(u[1], 0.4302208436292448232, 1e-12);
             assert_approx_eq!(u[2], -0.8962934242275933816, 1e-12);
+        }
+
+        #[test]
+        fn test_pn_parity() {
+            use rsofa::iauPn;
+            let mut p = [0.3, 1.2, -2.5];
+            let (r, u) = pvector_normalize(&p);
+
+            let mut r_iau = 0.0;
+            let mut u_iau = zero_p_vector();
+
+            unsafe {
+                iauPn(p.as_mut_ptr(), &mut r_iau, u_iau.as_mut_ptr());
+            }
+            assert_eq!(r, r_iau);
+            assert_eq!(u, u_iau);
         }
 
         #[test]
@@ -835,6 +927,20 @@ pub mod vec_ops {
             let p = [0.3, 1.2, -2.5];
             let sp = pvector_multiply_scalar(s, &p);
             assert_eq!(sp, [0.6, 2.4, -5.0]);
+        }
+
+        #[test]
+        fn test_sxp_parity() {
+            use rsofa::iauSxp;
+            let s = 2.0;
+            let mut p = [0.3, 1.2, -2.5];
+            let sp = pvector_multiply_scalar(s, &p);
+
+            let mut sp_iau = zero_p_vector();
+            unsafe {
+                iauSxp(s, p.as_mut_ptr(), sp_iau.as_mut_ptr());
+            }
+            assert_eq!(sp, sp_iau);
         }
     }
 }
