@@ -65,6 +65,20 @@ pub mod initialize {
             assert_eq!(p, [0.0, 0.0, 0.0]);
         }
 
+        #[test]
+        #[allow(unused_assignments)]
+        fn test_zp_parity() {
+            use rsofa::iauZp;
+            let mut p = [0.3, 1.2, -2.5];
+            p = zero_p_vector();
+
+            let mut p_iau = [0.3, 1.2, -2.5];
+            unsafe {
+                iauZp(p_iau.as_mut_ptr());
+            }
+            assert_eq!(p, p_iau);
+        }
+
         /// t_sofa.c t_zr
         #[test]
         #[allow(unused_assignments)]
@@ -74,6 +88,20 @@ pub mod initialize {
             assert_eq!(r, [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]);
         }
 
+        #[test]
+        #[allow(unused_assignments)]
+        fn test_zr_parity() {
+            use rsofa::iauZr;
+            let mut r = [[2.0, 3.0, 3.0], [3.0, 2.0, 4.0], [2.0, 3.0, 5.0]];
+            r = zero_r_matrix();
+
+            let mut r_iau = [[2.0, 3.0, 3.0], [3.0, 2.0, 4.0], [2.0, 3.0, 5.0]];
+            unsafe {
+                iauZr(r_iau.as_mut_ptr());
+            }
+            assert_eq!(r, r_iau);
+        }
+
         /// t_sofa.c t_ir
         #[test]
         #[allow(unused_assignments)]
@@ -81,6 +109,20 @@ pub mod initialize {
             let mut r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
             r = identity_r_matrix();
             assert_eq!(r, [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]);
+        }
+
+        #[test]
+        #[allow(unused_assignments)]
+        fn test_ir_parity() {
+            use rsofa::iauIr;
+            let mut r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
+            r = identity_r_matrix();
+
+            let mut r_iau = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
+            unsafe {
+                iauIr(r_iau.as_mut_ptr());
+            }
+            assert_eq!(r, r_iau);
         }
     }
 }
@@ -148,6 +190,21 @@ pub mod copy {
             assert_eq!(c, p);
         }
 
+        #[test]
+        fn test_cp_parity() {
+            use crate::vml::pvrm::initialize::zero_p_vector;
+            use rsofa::iauCp;
+            let p = [0.3, 1.2, -2.5];
+            let c = cp(&p);
+
+            let mut p_iau = [0.3, 1.2, -2.5];
+            let mut c_iau = zero_p_vector();
+            unsafe {
+                iauCp(p_iau.as_mut_ptr(), c_iau.as_mut_ptr());
+            }
+            assert_eq!(c, c_iau);
+        }
+
         /// t_sofa.c t_cr
         #[test]
         fn test_cr() {
@@ -155,6 +212,21 @@ pub mod copy {
             let c = cr(&r);
             //TODO let c = r;
             assert_eq!(c, r);
+        }
+
+        #[test]
+        fn test_cr_parity() {
+            use crate::vml::pvrm::initialize::zero_r_matrix;
+            use rsofa::iauCr;
+            let r = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
+            let c = cr(&r);
+
+            let mut r_iau = [[2.0, 3.0, 2.0], [3.0, 2.0, 3.0], [3.0, 4.0, 5.0]];
+            let mut c_iau = zero_r_matrix();
+            unsafe {
+                iauCr(r_iau.as_mut_ptr(), c_iau.as_mut_ptr());
+            }
+            assert_eq!(c, c_iau);
         }
     }
 }
