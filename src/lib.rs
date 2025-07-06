@@ -92,3 +92,8 @@ pub use vml::pvrm::rotation_vectors::rvector_to_rmatrix as rv2m;
 // PV Vectors
 // Initialize
 pub use vml::pvvec::initialize::zero_pvvector as zpv;
+
+// Copy, extend, extract
+pub use vml::pvvec::copy_extend_extract::append_zvelocity_pvvector as p2pv;
+pub use vml::pvvec::copy_extend_extract::copy_pvvector as cpv;
+pub use vml::pvvec::copy_extend_extract::discard_velocity_pvvector as pv2p;
