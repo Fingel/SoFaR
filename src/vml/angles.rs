@@ -1,5 +1,90 @@
 //! Operations on angles
 
+// Wrap
+// - angle_normalize_positive   ANP       normalize radians to range 0 to 2pi
+// - angle_normalize_pm         ANPM      normalize radians to range -pi to +pi
+pub mod wrap {
+
+    use crate::constants::{D2PI, DPI};
+    ///  Normalize angle into the range 0 <= a < 2pi.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     a        double     angle (radians)
+    ///
+    ///  Returned (function value):
+    ///              double     angle in range 0-2pi
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    pub fn angle_normalize_positive(a: f64) -> f64 {
+        let w = a % D2PI;
+        if w < 0.0 { w + D2PI } else { w }
+    }
+
+    ///  Normalize angle into the range -pi <= a < +pi.
+    ///
+    ///  This function is part of the International Astronomical Union's
+    ///  SOFA (Standards of Fundamental Astronomy) software collection.
+    ///
+    ///  Status:  vector/matrix support function.
+    ///
+    ///  Given:
+    ///     a        double     angle (radians)
+    ///
+    ///  Returned (function value):
+    ///              double     angle in range +/-pi
+    ///
+    ///  This revision:  2021 May 11
+    ///
+    ///  SOFA release 2023-10-11
+    pub fn angle_normalize_pm(a: f64) -> f64 {
+        let w = a % D2PI;
+        if w.abs() >= DPI {
+            w - D2PI.copysign(a)
+        } else {
+            w
+        }
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+        use assert_approx_eq::assert_approx_eq;
+
+        #[test]
+        fn test_anp() {
+            assert_approx_eq!(angle_normalize_positive(-0.1), 6.183185307179586477, 1e-12);
+        }
+
+        #[test]
+        fn test_anp_parity() {
+            use rsofa::iauAnp;
+            let r = angle_normalize_positive(-0.1);
+            let r_iau = unsafe { iauAnp(-0.1) };
+            assert_eq!(r, r_iau);
+        }
+
+        #[test]
+        fn test_anpm() {
+            assert_approx_eq!(angle_normalize_pm(-4.0), 2.283185307179586477, 1e-12);
+        }
+
+        #[test]
+        fn test_anpm_parity() {
+            use rsofa::iauAnpm;
+            let r = angle_normalize_pm(4.0);
+            let r_iau = unsafe { iauAnpm(4.0) };
+            assert_eq!(r, r_iau);
+        }
+    }
+}
+
 ///   To sexagesimal
 ///   - radians_to_hms  (A2TF)      decompose radians into hours, minutes, seconds
 ///   - radians_to_deg  (A2AF)      decompose radians into degrees, arcminutes, arcseconds
