@@ -46,7 +46,7 @@ pub use vml::angles::wrap::angle_normalize_positive as anp;
 
 // Angle conversions
 pub use vml::angles::to_sexagesimal::days_to_hms as d2tf;
-pub use vml::angles::to_sexagesimal::radians_to_deg as a2af;
+pub use vml::angles::to_sexagesimal::radians_to_dms as a2af;
 pub use vml::angles::to_sexagesimal::radians_to_hms as a2tf;
 
 // Pvectors and Rmatrices
