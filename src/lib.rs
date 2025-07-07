@@ -42,6 +42,7 @@ fn dint(x: f64) -> f64 {
 // Angles
 // Angle conversions
 pub use vml::angles::to_sexagesimal::days_to_hms as d2tf;
+pub use vml::angles::to_sexagesimal::radians_to_deg as a2af;
 pub use vml::angles::to_sexagesimal::radians_to_hms as a2tf;
 
 // Pvectors and Rmatrices
