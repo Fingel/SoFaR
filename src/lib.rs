@@ -19,16 +19,6 @@ type Rmatrix = [[f64; 3]; 3];
 ///and [2][3] in C.
 type PVvector = [[f64; 3]; 2];
 
-/// Most SOFA functions accept return arguments in the form of mutable pointers.
-/// The actual return value of these functions is either absent, or a status code.
-/// 0 means success, and any other value indicates an error or warning. Many functions
-/// return warning codes, but still complete their intended operations.
-///
-/// Because we aren't using return arguments, we need a way to indicate these warning
-/// states while still returning a value. Instead of simply returning a tuple, we define
-/// this warning type so that we can also include context with the error code. Most
-/// importantly, it removes the ambiguity from the return type of tuple (value, status)
-/// vs functions that return (value, value) and have no warnings.
 #[derive(Debug)]
 pub struct Warning {
     pub code: i32,
@@ -49,6 +39,16 @@ macro_rules! warning {
     };
 }
 
+/// Most SOFA functions accept return arguments in the form of mutable pointers.
+/// The actual return value of these functions is either absent, or a status code.
+/// 0 means success, and any other value indicates an error or warning. Many functions
+/// return warning codes, but still complete their intended operations.
+///
+/// Because we aren't using return arguments, we need a way to indicate these warning
+/// states while still returning a value. Instead of simply returning a tuple, we define
+/// this warning type so that we can also include context with the error code. Most
+/// importantly, it removes the ambiguity from the return type of tuple (value, status)
+/// vs functions that return (value, value) and have no warnings.
 #[derive(Debug)]
 pub struct Warned<T> {
     pub value: T,
