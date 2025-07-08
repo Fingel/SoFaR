@@ -389,29 +389,9 @@ pub mod to_sexagesimal {
 /// - hms_to_radians    TF2A      hours, minutes, seconds to radians
 /// - hms_to_days       TF2D      hours, minutes, seconds to days
 pub mod from_sexagesimal {
-    use crate::constants::{DAS2R, DAYSEC, DS2R};
-    #[derive(Debug, PartialEq)]
-    pub enum DmsStatus {
-        Ok,
-        /// ideg outside 0-359
-        DegOutOfRange,
-        /// iamin outside 0-59
-        AminOutOfRange,
-        /// asec outside 0-59.999...
-        AsecOutOfRange,
-    }
+    use crate::{Warned, warning};
 
-    impl From<i32> for DmsStatus {
-        fn from(status_code: i32) -> Self {
-            match status_code {
-                0 => DmsStatus::Ok,
-                1 => DmsStatus::DegOutOfRange,
-                2 => DmsStatus::AminOutOfRange,
-                3 => DmsStatus::AsecOutOfRange,
-                _ => DmsStatus::Ok, // Default to Ok for unknown values
-            }
-        }
-    }
+    use crate::constants::{DAS2R, DAYSEC, DS2R};
     ///  Convert degrees, arcminutes, arcseconds to radians.
     ///
     ///  This function is part of the International Astronomical Union's
@@ -447,7 +427,7 @@ pub mod from_sexagesimal {
     ///  This revision:  2021 May 11
     ///
     ///  SOFA release 2023-10-11
-    pub fn dms_to_radians(s: char, ideg: i32, iamin: i32, asec: f64) -> (f64, DmsStatus) {
+    pub fn dms_to_radians(s: char, ideg: i32, iamin: i32, asec: f64) -> Warned<f64> {
         let sign = match s {
             '-' => -1.0,
             _ => 1.0,
@@ -459,38 +439,16 @@ pub mod from_sexagesimal {
 
         // Validate arguments and return status.
         if !(0..=359).contains(&ideg) {
-            (rad, DmsStatus::DegOutOfRange)
+            Warned::with_warning(rad, warning!(1, "ideg outside range 0-359"))
         } else if !(0..=59).contains(&iamin) {
-            (rad, DmsStatus::AminOutOfRange)
+            Warned::with_warning(rad, warning!(2, "iamin outside range 0-59"))
         } else if !(0.0..60.0).contains(&asec) {
-            (rad, DmsStatus::AsecOutOfRange)
+            Warned::with_warning(rad, warning!(3, "asec outside range 0-59.999..."))
         } else {
-            (rad, DmsStatus::Ok)
+            Warned::new(rad)
         }
     }
 
-    #[derive(Debug, PartialEq)]
-    pub enum HmsStatus {
-        Ok,
-        /// ihour outside range 0-23
-        IhourOutOfRange,
-        /// imin outside range 0-59
-        IminOutOfRange,
-        /// sec outside range 0-59.999...
-        SecOutOfRange,
-    }
-
-    impl From<i32> for HmsStatus {
-        fn from(status_code: i32) -> Self {
-            match status_code {
-                0 => HmsStatus::Ok,
-                1 => HmsStatus::IhourOutOfRange,
-                2 => HmsStatus::IminOutOfRange,
-                3 => HmsStatus::SecOutOfRange,
-                _ => HmsStatus::Ok, // Default to Ok for unknown values
-            }
-        }
-    }
     ///  Convert hours, minutes, seconds to radians.
     ///
     ///  This function is part of the International Astronomical Union's
@@ -524,7 +482,7 @@ pub mod from_sexagesimal {
     ///      first, the smallest taking precedence.
     ///
     ///  This revision:  2021 May 11
-    pub fn hms_to_radians(s: char, ihour: i32, imin: i32, sec: f64) -> (f64, HmsStatus) {
+    pub fn hms_to_radians(s: char, ihour: i32, imin: i32, sec: f64) -> Warned<f64> {
         let sign = match s {
             '-' => -1.0,
             _ => 1.0,
@@ -536,13 +494,13 @@ pub mod from_sexagesimal {
 
         // Validate arguments and return status.
         if !(0..=23).contains(&ihour) {
-            (rad, HmsStatus::IhourOutOfRange)
+            Warned::with_warning(rad, warning!(1, "ihour outside range 0-23"))
         } else if !(0..=59).contains(&imin) {
-            (rad, HmsStatus::IminOutOfRange)
+            Warned::with_warning(rad, warning!(2, "imin outside range 0-59"))
         } else if !(0.0..60.0).contains(&sec) {
-            (rad, HmsStatus::SecOutOfRange)
+            Warned::with_warning(rad, warning!(3, "sec outside range 0-59.999..."))
         } else {
-            (rad, HmsStatus::Ok)
+            Warned::new(rad)
         }
     }
 
@@ -581,7 +539,7 @@ pub mod from_sexagesimal {
     //  This revision:  2021 May 11
     //
     //  SOFA release 2023-10-11
-    pub fn hms_to_days(s: char, ihour: i32, imin: i32, sec: f64) -> (f64, HmsStatus) {
+    pub fn hms_to_days(s: char, ihour: i32, imin: i32, sec: f64) -> Warned<f64> {
         let sign = match s {
             '-' => -1.0,
             _ => 1.0,
@@ -592,13 +550,13 @@ pub mod from_sexagesimal {
 
         // Validate arguments and return status.
         if !(0..=23).contains(&ihour) {
-            (days, HmsStatus::IhourOutOfRange)
+            Warned::with_warning(days, warning!(1, "ihour outside range 0-23"))
         } else if !(0..=59).contains(&imin) {
-            (days, HmsStatus::IminOutOfRange)
+            Warned::with_warning(days, warning!(2, "imin outside range 0-59"))
         } else if !(0.0..60.0).contains(&sec) {
-            (days, HmsStatus::SecOutOfRange)
+            Warned::with_warning(days, warning!(3, "sec outside range 0-59.999..."))
         } else {
-            (days, HmsStatus::Ok)
+            Warned::new(days)
         }
     }
 
@@ -613,70 +571,70 @@ pub mod from_sexagesimal {
         // t_sofa.c t_af2a
         #[test]
         fn test_af2a() {
-            let (a, status) = dms_to_radians('-', 45, 13, 27.2);
-            assert_approx_eq!(a, -0.7893115794313644842, 1e-12);
-            assert_eq!(status, DmsStatus::Ok);
+            let a = dms_to_radians('-', 45, 13, 27.2);
+            assert_approx_eq!(a.value, -0.7893115794313644842, 1e-12);
+            assert!(a.warning.is_none());
         }
 
         #[test]
         fn test_af2a_status() {
-            let (_, status) = dms_to_radians('-', 45, 13, 60.0);
-            assert_eq!(status, DmsStatus::AsecOutOfRange);
+            let a = dms_to_radians('-', 45, 13, 60.0);
+            assert_eq!(a.ok_code(), 3);
         }
 
         #[test]
         fn test_af2a_parity() {
             use rsofa::iauAf2a;
-            let (a, status) = dms_to_radians('-', 45, 13, 27.2);
+            let a = dms_to_radians('-', 45, 13, 27.2);
 
             let mut a_iau = 0.0;
             let status_iau = unsafe { iauAf2a('-' as c_char, 45, 13, 27.2, &mut a_iau) };
-            assert_eq!(a, a_iau);
-            assert_eq!(status, DmsStatus::from(status_iau));
+            assert_eq!(a.value, a_iau);
+            assert_eq!(status_iau, a.ok_code());
         }
 
         // t_sofa.c t_tf2a
         #[test]
         fn test_tf2a() {
-            let (a, status) = hms_to_radians('+', 4, 58, 20.2);
-            assert_approx_eq!(a, 1.301739278189537429, 1e-12);
-            assert_eq!(status, HmsStatus::Ok);
+            let a = hms_to_radians('+', 4, 58, 20.2);
+            assert_approx_eq!(a.value, 1.301739278189537429, 1e-12);
+            assert!(a.warning.is_none());
         }
 
         #[test]
         fn test_tf2a_parity() {
             use rsofa::iauTf2a;
-            let (a, status) = hms_to_radians('+', 4, 58, 20.2);
+            let a = hms_to_radians('+', 4, 58, 20.2);
 
             let mut a_iau = 0.0;
             let status_iau = unsafe { iauTf2a('+' as c_char, 4, 58, 20.2, &mut a_iau) };
-            assert_eq!(a, a_iau);
-            assert_eq!(status, HmsStatus::from(status_iau));
+            assert_eq!(a.value, a_iau);
+            assert_eq!(status_iau, a.ok_code());
         }
 
         #[test]
         fn test_tf2a_status() {
-            let (_, status) = hms_to_radians('+', 4, 120, 20.2);
-            assert_eq!(status, HmsStatus::IminOutOfRange);
+            let a = hms_to_radians('+', 4, 120, 20.2);
+            assert_eq!(a.ok_code(), 2);
         }
 
         // t_sofa.c t_tf2d
         #[test]
         fn test_tf2d() {
-            let (d, status) = hms_to_days(' ', 23, 55, 10.9);
-            assert_approx_eq!(d, 0.9966539351851851852, 1e-12);
-            assert_eq!(status, HmsStatus::Ok);
+            let d = hms_to_days(' ', 23, 55, 10.9);
+            assert_approx_eq!(d.value, 0.9966539351851851852, 1e-12);
+            assert!(d.warning.is_none());
         }
 
         #[test]
         fn test_tf2d_parity() {
             use rsofa::iauTf2d;
-            let (d, status) = hms_to_days(' ', 23, 55, 10.9);
+            let d = hms_to_days(' ', 23, 55, 10.9);
 
             let mut d_iau = 0.0;
             let status_iau = unsafe { iauTf2d(' ' as c_char, 23, 55, 10.9, &mut d_iau) };
-            assert_eq!(d, d_iau);
-            assert_eq!(status, HmsStatus::from(status_iau));
+            assert_eq!(d.value, d_iau);
+            assert_eq!(status_iau, d.ok_code());
         }
     }
 }

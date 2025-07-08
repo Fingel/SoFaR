@@ -1,3 +1,5 @@
+use std::fmt;
+
 pub mod constants;
 pub mod vml;
 
@@ -16,6 +18,65 @@ type Rmatrix = [[f64; 3]; 3];
 ///"Position/velocity" or "pv" vectors have dimensions (3,2) in Fortran
 ///and [2][3] in C.
 type PVvector = [[f64; 3]; 2];
+
+/// Most SOFA functions accept return arguments in the form of mutable pointers.
+/// The actual return value of these functions is either absent, or a status code.
+/// 0 means success, and any other value indicates an error or warning. Many functions
+/// return warning codes, but still complete their intended operations.
+///
+/// Because we aren't using return arguments, we need a way to indicate these warning
+/// states while still returning a value. Instead of simply returning a tuple, we define
+/// this warning type so that we can also include context with the error code. Most
+/// importantly, it removes the ambiguity from the return type of tuple (value, status)
+/// vs functions that return (value, value) and have no warnings.
+#[derive(Debug)]
+pub struct Warning {
+    pub code: i32,
+    pub message: String,
+}
+
+impl fmt::Display for Warning {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{} = {}", self.code, self.message)
+    }
+}
+
+// Macro to quickly create warning
+#[macro_export]
+macro_rules! warning {
+    ($code:expr, $($arg:tt)*) => {
+        $crate::Warning{code: $code, message: format!($($arg)*)}
+    };
+}
+
+#[derive(Debug)]
+pub struct Warned<T> {
+    pub value: T,
+    pub warning: Option<Warning>,
+}
+
+impl<T> Warned<T> {
+    /// Value with no warnings associated
+    pub fn new(value: T) -> Self {
+        Self {
+            value,
+            warning: None,
+        }
+    }
+
+    /// Contains a warning, but also a computed value
+    pub fn with_warning(value: T, warning: Warning) -> Self {
+        Self {
+            value,
+            warning: Some(warning),
+        }
+    }
+
+    /// Return 0 if no warning, otherwise return the warning code
+    pub fn ok_code(&self) -> i32 {
+        self.warning.as_ref().map_or(0, |w| w.code)
+    }
+}
 
 //TODO: Remove this in favor of round() as it compiles down to
 // a single instruction on x86_64: ROUNDSD
