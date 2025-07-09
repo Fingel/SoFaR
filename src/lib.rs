@@ -1,5 +1,6 @@
 use std::fmt;
 
+pub mod calendars;
 pub mod constants;
 pub mod vml;
 
@@ -76,6 +77,10 @@ impl<T> Warned<T> {
     pub fn ok_code(&self) -> i32 {
         self.warning.as_ref().map_or(0, |w| w.code)
     }
+    /// Returns an error if there is a warning
+    pub fn value_safe(&self) -> Result<&T, &Warning> {
+        self.warning.as_ref().map_or(Ok(&self.value), Err)
+    }
 }
 
 //TODO: Remove this in favor of round() as it compiles down to
@@ -99,6 +104,14 @@ fn dnint(x: f64) -> f64 {
 fn dint(x: f64) -> f64 {
     if x < 0.0 { x.ceil() } else { x.floor() }
 }
+
+// Calendar
+pub use crate::calendars::{
+    besselian_e_to_jd as epb2jd, cal_to_jd as cal2jd, jd_to_besselian_e as epb,
+    jd_to_cal as jd2cal, jd_to_cal_fmt as jdcalf, jd_to_je as epj, je_to_jd as epj2jd,
+};
+
+// Vector Math
 
 // Angles
 // Wrap
