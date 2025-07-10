@@ -1,8 +1,8 @@
 //! Operations on angles
 
-// Wrap
-// - angle_normalize_positive   ANP       normalize radians to range 0 to 2pi
-// - angle_normalize_pm         ANPM      normalize radians to range -pi to +pi
+/// Wrap
+/// - angle_normalize_positive   ANP       normalize radians to range 0 to 2pi
+/// - angle_normalize_pm         ANPM      normalize radians to range -pi to +pi
 pub mod wrap {
 
     use crate::constants::{D2PI, DPI};
@@ -88,9 +88,9 @@ pub mod wrap {
 }
 
 ///   To sexagesimal
-///   - radians_to_hms  (A2TF)      decompose radians into hours, minutes, seconds
-///   - radians_to_dms  (A2AF)      decompose radians into degrees, arcminutes, arcseconds
-///   - days_to_hms     (D2TF)      decompose days into hours, minutes, seconds
+///   - radians_to_hms  A2TF      decompose radians into hours, minutes, seconds
+///   - radians_to_dms  A2AF      decompose radians into degrees, arcminutes, arcseconds
+///   - days_to_hms     D2TF      decompose days into hours, minutes, seconds
 pub mod to_sexagesimal {
     use crate::constants::*;
     use crate::{dint, dnint};

@@ -1,9 +1,9 @@
 //! Operations involving p-vectors and r-matrices
 
 ///   Initialize
-///   - zero_pvector (ZP)        zero p-vector
-///   - zero_rmatrix (ZR)        initialize r-matrix to null
-///   - identity_rmatrix (IR)        initialize r-matrix to identity
+///   - zero_pvector        ZP        zero p-vector
+///   - zero_rmatrix        ZR        initialize r-matrix to null
+///   - identity_rmatrix    IR        initialize r-matrix to identity
 pub mod initialize {
     use crate::{Pvector, Rmatrix};
 
@@ -128,8 +128,8 @@ pub mod initialize {
 }
 
 ///   Copy
-///   - cp (CP)        copy p-vector
-///   - cr (CR)        copy r-matrix
+///   - cp  CP        copy p-vector
+///   - cr  CR        copy r-matrix
 pub mod copy {
     use crate::{Pvector, Rmatrix};
     ///  Copy a p-vector.
@@ -232,9 +232,9 @@ pub mod copy {
 }
 
 ///  Build rotations
-/// - rotate_rmatrix_about_x (RX)        rotate r-matrix about x
-/// - rotate_rmatrix_about_y (RY)        rotate r-matrix about y
-/// - rotate_rmatrix_about_z (RZ)        rotate r-matrix about z
+/// - rotate_rmatrix_about_x    RX        rotate r-matrix about x
+/// - rotate_rmatrix_about_y    RY        rotate r-matrix about y
+/// - rotate_rmatrix_about_z    RZ        rotate r-matrix about z
 pub mod rotations {
     use crate::Rmatrix;
 
@@ -482,10 +482,10 @@ pub mod rotations {
 }
 
 /// Spherical/Cartesian conversions
-/// - spherical_to_unit_vector (S2C)       spherical to unit vector
-/// - unit_vector_to_spherical (C2S)       unit vector to spherical
-/// - spherical_to_pvector (S2P)       spherical to p-vector
-/// - p_vector_to_spherical (P2S)       p-vector to spherical
+/// - spherical_to_unit_vector  S2C       spherical to unit vector
+/// - unit_vector_to_spherical  C2S       unit vector to spherical
+/// - spherical_to_pvector      S2P       spherical to p-vector
+/// - p_vector_to_spherical     P2S       p-vector to spherical
 pub mod sphere_cart_conv {
     use crate::Pvector;
     use crate::vml::pvrm::vec_ops::{pvector_modulus, pvector_multiply_scalar};
@@ -710,14 +710,14 @@ pub mod sphere_cart_conv {
 }
 
 ///Operations on vectors
-///- pvector_plus_pvector (PPP)       p-vector plus p-vector
-///- pvector_minus_pvector (PMP)       p-vector minus p-vector
-///- pvector_plus_scaled_pvector (PPSP)      p-vector plus scaled p-vector
-///- pvector_dot_product (PDP)       inner (=scalar=dot) product of two p-vectors
-///- pvector_cross_product (PXP)       outer (=vector=cross) product of two p-vectors
-///- pvector_modulus (PM)        modulus of p-vector
-///- pvector_normalize (PN)        normalize p-vector returning modulus
-///- pvector_multiply_scalar (SXP)       multiply p-vector by scalar
+///- pvector_plus_pvector          PPP       p-vector plus p-vector
+///- pvector_minus_pvector         PMP       p-vector minus p-vector
+///- pvector_plus_scaled_pvector   PPSP      p-vector plus scaled p-vector
+///- pvector_dot_product           PDP       inner (=scalar=dot) product of two p-vectors
+///- pvector_cross_product         PXP       outer (=vector=cross) product of two p-vectors
+///- pvector_modulus               PM        modulus of p-vector
+///- pvector_normalize             PN        normalize p-vector returning modulus
+///- pvector_multiply_scalar       SXP       multiply p-vector by scalar
 pub mod vec_ops {
     use crate::Pvector;
     use crate::vml::pvrm::initialize::zero_pvector;
@@ -1126,8 +1126,8 @@ pub mod vec_ops {
 
 /// Operations on matrices
 ///
-/// - rmatrix_multiply (RXR)       r-matrix multiply
-/// - transpose_rmatrix (TR)        transpose r-matrix
+/// - rmatrix_multiply      RXR       r-matrix multiply
+/// - transpose_rmatrix     TR        transpose r-matrix
 pub mod matrix_ops {
     use crate::Rmatrix;
     use crate::vml::pvrm::initialize::zero_rmatrix;
@@ -1256,8 +1256,8 @@ pub mod matrix_ops {
 }
 
 /// Matrix-vector products
-/// - rmatrix_pvector_product (RXP)       product of r-matrix and p-vector
-/// - transpose_rmatrix_pvector_product (TRXP)      product of transpose of r-matrix and p-vector
+/// - rmatrix_pvector_product           RXP       product of r-matrix and p-vector
+/// - transpose_rmatrix_pvector_product TRXP      product of transpose of r-matrix and p-vector
 pub mod matrix_vec_products {
     use crate::vml::pvrm::initialize::zero_pvector;
     use crate::vml::pvrm::matrix_ops::transpose_rmatrix;
@@ -1387,10 +1387,10 @@ pub mod matrix_vec_products {
 }
 
 /// Separation and position-angle
-/// - angular_separation_pvector (SEPP)      angular separation from p-vectors
-/// - angular_separation_spherical (SEPS)      angular separation from spherical coordinates
-/// - position_angle_from_pvector (PAP)       position-angle from p-vectors
-/// - position_angle_from_spherical (PAS)       position-angle from spherical coordinates
+/// - angular_separation_pvector    SEPP      angular separation from p-vectors
+/// - angular_separation_spherical  SEPS      angular separation from spherical coordinates
+/// - position_angle_from_pvector   PAP       position-angle from p-vectors
+/// - position_angle_from_spherical PAS       position-angle from spherical coordinates
 pub mod sep_position_angle {
     use crate::{
         Pvector,
@@ -1703,8 +1703,8 @@ pub mod sep_position_angle {
 }
 
 /// Rotation vectors
-/// - rvector_to_rmatrix (RV2M)      r-vector to r-matrix
-/// - rmatrix_to_rvector (RM2V)      r-matrix to r-vector
+/// - rvector_to_rmatrix    RV2M      r-vector to r-matrix
+/// - rmatrix_to_rvector    RM2V      r-matrix to r-vector
 pub mod rotation_vectors {
     use crate::{Pvector, Rmatrix, vml::pvrm::initialize::zero_rmatrix};
     ///  Form the r-matrix corresponding to a given r-vector.
