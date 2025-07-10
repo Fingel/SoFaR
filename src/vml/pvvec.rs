@@ -1,7 +1,7 @@
 //! Operations involving PV-Vectors
 
 /// Initialize
-/// - zero_pvvector (ZPV)       zero pv-vector
+/// - zero_pvvector     ZPV       zero pv-vector
 pub mod initialize {
     use crate::PVvector;
 
@@ -54,9 +54,9 @@ pub mod initialize {
 
 ///  Copy/extend/extract
 ///
-///- copy_pvvector (CPV)       copy pv-vector
-///- append_zvelocity_pvvector (P2PV)      append zero velocity to p-vector
-///- discard_velocity_pvvector (PV2P)      discard velocity component of pv-vector
+///- copy_pvvector                  CPV       copy pv-vector
+///- append_zvelocity_pvvector      P2PV      append zero velocity to p-vector
+///- discard_velocity_pvvector      PV2P      discard velocity component of pv-vector
 pub mod copy_extend_extract {
     use crate::PVvector;
     use crate::Pvector;
@@ -206,8 +206,8 @@ pub mod copy_extend_extract {
 }
 ///Spherical/Cartesian conversions
 ///
-/// - spherical_to_pvvector (S2PV)      spherical to pv-vector
-/// - pvvector_to_spherical (PV2S)      pv-vector to spherical
+/// - spherical_to_pvvector     S2PV      spherical to pv-vector
+/// - pvvector_to_spherical     PV2S      pv-vector to spherical
 pub mod sphere_cart_conv {
     use crate::PVvector;
 
@@ -454,15 +454,15 @@ pub mod sphere_cart_conv {
 }
 ///Operations on pv-vectors
 ///
-/// - pvvector_plus_pvvector (PVPPV)     pv-vector plus pv-vector
-/// - pvvector_minus_pvvector (PVMPV)     pv-vector minus pv-vector
-/// - pvvector_dot_pvvector (PVDPV)     inner (=scalar=dot) product of two pv-vectors
-/// - pvvector_cross_pvvector (PVXPV)     outer (=vector=cross) product of two pv-vectors
-/// - pvvector_modulus (PVM)       modulus of pv-vector
-/// - pvvector_multiply_scalar (SXPV)      multiply pv-vector by scalar
-/// - pvvector_multiply_two_scalar (S2XPV)     multiply pv-vector by two scalars
-/// - pvvector_update (PVU)       update pv-vector
-/// - pvvector_update_discard_velocity (PVUP)      update pv-vector discarding velocity
+/// - pvvector_plus_pvvector            PVPPV     pv-vector plus pv-vector
+/// - pvvector_minus_pvvector           PVMPV     pv-vector minus pv-vector
+/// - pvvector_dot_pvvector             PVDPV     inner (=scalar=dot) product of two pv-vectors
+/// - pvvector_cross_pvvector           PVXPV     outer (=vector=cross) product of two pv-vectors
+/// - pvvector_modulus                  PVM       modulus of pv-vector
+/// - pvvector_multiply_scalar          SXPV      multiply pv-vector by scalar
+/// - pvvector_multiply_two_scalar      S2XPV     multiply pv-vector by two scalars
+/// - pvvector_update                   PVU       update pv-vector
+/// - pvvector_update_discard_velocity  PVUP      update pv-vector discarding velocity
 pub mod pvvector_ops {
     use crate::vml::pvrm::vec_ops::{
         pvector_cross_product, pvector_dot_product, pvector_minus_pvector, pvector_modulus,
@@ -1061,8 +1061,8 @@ pub mod pvvector_ops {
 
 ///Matrix-vector products
 ///
-/// - rmatrix_multiply_pvvector (RXPV)      product of r-matrix and pv-vector
-/// - rmatrix_multiply_pvvector_transpose (TRXPV)     product of transpose of r-matrix and pv-vector
+/// - rmatrix_multiply_pvvector             RXPV      product of r-matrix and pv-vector
+/// - rmatrix_multiply_pvvector_transpose   TRXPV     product of transpose of r-matrix and pv-vector
 pub mod matrix_vector_products {
     use crate::vml::pvrm::matrix_ops::transpose_rmatrix;
     use crate::vml::pvrm::matrix_vec_products::rmatrix_pvector_product;
