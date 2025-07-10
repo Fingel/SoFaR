@@ -15,8 +15,6 @@ pub enum DateError {
     InvalidYear,
     #[error("Bad month")]
     InvalidMonth,
-    #[error("Bad day")]
-    InvalidDay,
 }
 ///  Gregorian Calendar to Julian Date.
 ///
