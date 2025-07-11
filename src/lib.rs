@@ -4,6 +4,7 @@ pub mod astrometry;
 pub mod calendars;
 pub mod constants;
 pub mod earth_rot;
+pub mod ephemerides;
 pub mod time;
 pub mod vml;
 
@@ -147,6 +148,9 @@ pub use crate::earth_rot::{
     gmst_2006 as gmst06, gst_1994 as gst94, gst_2000a as gst00a, gst_2000b as gst00b,
     gst_2006 as gst06, gst_2006a as gst06a,
 };
+
+// Ephemerides
+pub use crate::ephemerides::{earth_pv as epv00, moon_pv as moon98, planet_pv as plan94};
 
 // Vector Math
 

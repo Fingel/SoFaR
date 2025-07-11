@@ -102,6 +102,13 @@ SoFar
 | ❌ |gst_2006a|   GST06A|    Greenwich apparent sidereal time, IAU 2006/2000A|
 | ❌ |gst_1994|    GST94|     Greenwich apparent sidereal time, IAU 1994|
 
+### Ephemerides
+|  | sofar | iau | description |
+| --- | --- | --- | --- |
+| ❌ |earth_pv|   EPV00|     Earth position and velocity|
+| ❌ |moon_pv|    MOON98|    Moon position and velocity|
+| ❌ |planet_pv|  PLAN94|    major-planet position and velocity|
+
 ## Vector/Matrix Library
 
 ### Operations on Angles
