@@ -59,6 +59,49 @@ SoFar
 | ❌ | star_pm|                        STARPM |    apply proper motion |
 | ❌ | star_pv|                        STARPV |    star catalog data to space motion pv-vector |
 
+### Time
+|  | sofar | iau | description |
+| --- | --- | --- | --- |
+| ❌ |format_jd|         D2DTF|     format 2-part JD for output|
+| ❌ |delta_at|          DAT|       Delta(AT) (=TAI-UTC) for a given UTC date|
+| ❌ |tdb_tt_diff|       DTDB|      TDB-TT|
+| ❌ |datetime_to_jd|    DTF2D|     encode time and date fields into 2-part JD|
+| ❌ |tai_to_tt|         TAITT|     TAI to TT|
+| ❌ |tai_to_ut1|        TAIUT1|    TAI to UT1|
+| ❌ |tai_to_utc|        TAIUTC|    TAI to UTC|
+| ❌ |tcb_to_tdb|        TCBTDB|    TCB to TDB|
+| ❌ |tcg_to_tt|         TCGTT|     TCG to TT|
+| ❌ |tdb_to_tcb|        TDBTCB|    TDB to TCB|
+| ❌ |tdb_to_tt|         TDBTT|     TDB to TT|
+| ❌ |tt_to_tai|         TTTAI|     TT to TAI|
+| ❌ |tt_to_tcg|         TTTCG|     TT to TCG|
+| ❌ |tt_to_tdb|         TTTDB|     TT to TDB|
+| ❌ |tt_to_ut1|         TTUT1|     TT to UT1|
+| ❌ |ut1_to_tai|        UT1TAI|    UT1 to TAI|
+| ❌ |ut1_to_tt|         UT1TT|     UT1 to TT|
+| ❌ |ut1_to_utc|        UT1UTC|    UT1 to UTC|
+| ❌ |utc_to_tai|        UTCTAI|    UTC to TAI|
+| ❌ |utc_to_ut1|        UTCUT1|    UTC to UT1|
+
+### Earth Rotation
+|  | sofar | iau | description |
+| --- | --- | --- | --- |
+| ❌ |ee_2000|     EE00|      equation of the equinoxes, IAU 2000|
+| ❌ |ee_2000a|    EE00A|     equation of the equinoxes, IAU 2000A|
+| ❌ |ee_2000b|    EE00B|     equation of the equinoxes, IAU 2000B|
+| ❌ |ee_2006a|    EE06A|     equation of the equinoxes, IAU 2006/2000A|
+| ❌ |ee_ct_2000|  EECT00|    equation of the equinoxes complementary terms, IAU 2000|
+| ❌ |ee_1994|     EQEQ94|    equation of the equinoxes, IAU 1994|
+| ❌ |era_2000|    ERA00|     Earth rotation angle, IAU 2000|
+| ❌ |gmst_2000|   GMST00|    Greenwich mean sidereal time, IAU 2000|
+| ❌ |gmst_2006|   GMST06|    Greenwich mean sidereal time, IAU 2006|
+| ❌ |gmst_1982|   GMST82|    Greenwich mean sidereal time, IAU 1982|
+| ❌ |gst_2000a|   GST00A|    Greenwich apparent sidereal time, IAU 2000A|
+| ❌ |gst_2000b|   GST00B|    Greenwich apparent sidereal time, IAU 2000B|
+| ❌ |gst_2006|    GST06|     Greenwich apparent ST, IAU 2006, given NPB matrix|
+| ❌ |gst_2006a|   GST06A|    Greenwich apparent sidereal time, IAU 2006/2000A|
+| ❌ |gst_1994|    GST94|     Greenwich apparent sidereal time, IAU 1994|
+
 ## Vector/Matrix Library
 
 ### Operations on Angles

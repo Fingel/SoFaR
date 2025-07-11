@@ -3,6 +3,8 @@ use std::fmt;
 pub mod astrometry;
 pub mod calendars;
 pub mod constants;
+pub mod earth_rot;
+pub mod time;
 pub mod vml;
 
 // Type aliases to reduce finger strain
@@ -127,6 +129,23 @@ pub use crate::astrometry::{
     prep_i2g_geocentric as apcg, prep_i2g_geocentric_13 as apcg13, prep_i2obs_terrestrial as apco,
     prep_i2obs_terrestrial_13 as apco13, pv_to_star_catalog as pvstar,
     refraction_constants as refco, star_pm as starpm, star_pv as starpv, stellar_aberration as ab,
+};
+
+// Time
+pub use crate::time::{
+    datetime_to_jd as dtf2d, delta_at as dat, format_jd as d2dtf, tai_to_tt as taitt,
+    tai_to_ut1 as taiut1, tai_to_utc as taiutc, tcb_to_tdb as tcbtdb, tcg_to_tt as tcgtt,
+    tdb_to_tcb as tdbtcb, tdb_to_tt as tdbtt, tdb_tt_diff as dtdb, tt_to_tai as tttai,
+    tt_to_tcg as tttcg, tt_to_tdb as tttdb, tt_to_ut1 as ttut1, ut1_to_tai as ut1tai,
+    ut1_to_tt as ut1tt, ut1_to_utc as ut1utc, utc_to_tai as utctai, utc_to_ut1 as utcut1,
+};
+
+// Earth Rotation
+pub use crate::earth_rot::{
+    ee_1994 as eqeq94, ee_2000 as ee00, ee_2000a as ee00a, ee_2000b as ee00b, ee_2006a as ee06a,
+    ee_ct_2000 as eect00, era_2000 as era00, gmst_1982 as gmst82, gmst_2000 as gmst00,
+    gmst_2006 as gmst06, gst_1994 as gst94, gst_2000a as gst00a, gst_2000b as gst00b,
+    gst_2006 as gst06, gst_2006a as gst06a,
 };
 
 // Vector Math
