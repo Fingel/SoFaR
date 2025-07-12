@@ -109,6 +109,74 @@ SoFar
 | ❌ |moon_pv|    MOON98|    Moon position and velocity|
 | ❌ |planet_pv|  PLAN94|    major-planet position and velocity|
 
+## Precession, nutation, polar motion
+|  | sofar | iau | description |
+| --- | --- | --- | --- |
+| ❌ |bias_2000|                 BI00|      frame bias components, IAU 2000|
+| ❌ |bias_precession_2000|      BP00|      frame bias and precession matrices, IAU 2000|
+| ❌ |bias_precession_2006|      BP06|      frame bias and precession matrices, IAU 2006|
+| ❌ |npb_to_xy|                 BPN2XY|    extract CIP X,Y coordinates from NPB matrix|
+| ❌ |c2i_2000a|                 C2I00A|    celestial-to-intermediate matrix, IAU 2000A|
+| ❌ |c2i_2000b|                 C2I00B|    celestial-to-intermediate matrix, IAU 2000B|
+| ❌ |c2i_2006|                  C2I06A|    celestial-to-intermediate matrix, IAU 2006/2000A|
+| ❌ |c2i_npb|                   C2IBPN|    celestial-to-intermediate matrix, given NPB matrix, IAU 2000|
+| ❌ |c2i_xy|                    C2IXY|     celestial-to-intermediate matrix, given X,Y, IAU 2000|
+| ❌ |c2i_xys|                   C2IXYS|    celestial-to-intermediate matrix, given X,Y and s|
+| ❌ |c2t_2000a|                 C2T00A|    celestial-to-terrestrial matrix, IAU 2000A|
+| ❌ |c2t_2000b|                 C2T00B|    celestial-to-terrestrial matrix, IAU 2000B|
+| ❌ |c2t_2006|                  C2T06A|    celestial-to-terrestrial matrix, IAU 2006/2000A|
+| ❌ |c2t_cio|                   C2TCIO|    form CIO-based celestial-to-terrestrial matrix|
+| ❌ |c2t_eqx|                   C2TEQX|    form equinox-based celestial-to-terrestrial matrix|
+| ❌ |c2t_nutation|              C2TPE|     celestial-to-terrestrial matrix given nutation, IAU 2000|
+| ❌ |xy_to_c2t|                 C2TXY|     celestial-to-terrestrial matrix given CIP, IAU 2000|
+| ❌ |eo_2006|                   EO06A|     equation of the origins, IAU 2006/2000A|
+| ❌ |eo_npb_s|                  EORS|      equation of the origins, given NPB matrix and s|
+| ❌ |fw_to_rmatrix|             FW2M|      Fukushima-Williams angles to r-matrix|
+| ❌ |fw_to_xy|                  FW2XY|     Fukushima-Williams angles to X,Y|
+| ❌ |long_term_precession|      LTP|       long-term precession matrix|
+| ❌ |long_term_precession_b|    LTPB|      long-term precession matrix, including ICRS frame bias|
+| ❌ |long_term_precession_ecl|  LTPECL|    long-term precession of the ecliptic|
+| ❌ |long_term_precession_eq|   LTPEQU|    long-term precession of the equator|
+| ❌ |nutation_matrix_2000a|     NUM00A|    nutation matrix, IAU 2000A|
+| ❌ |nutation_matrix_2000b|     NUM00B|    nutation matrix, IAU 2000B|
+| ❌ |nutation_matrix_2006|      NUM06A|    nutation matrix, IAU 2006/2000A|
+| ❌ |nutation_matrix|           NUMAT|     form nutation matrix|
+| ❌ |nutation_2000a|            NUT00A|    nutation, IAU 2000A|
+| ❌ |nutation_2000b|            NUT00B|    nutation, IAU 2000B|
+| ❌ |nutation_2006|             NUT06A|    nutation, IAU 2006/2000A|
+| ❌ |nutation_1980|             NUT80|     nutation, IAU 1980|
+| ❌ |nutation_matrix_1980|      NUTM80|    nutation matrix, IAU 1980|
+| ❌ |obliquity_2006|            OBL06|     mean obliquity, IAU 2006|
+| ❌ |obliquity_1980|            OBL80|     mean obliquity, IAU 1980|
+| ❌ |precession_bias_2006|      PB06|      zeta,z,theta precession angles, IAU 2006, including bias|
+| ❌ |precession_fw_2006|        PFW06|     bias-precession Fukushima-Williams angles, IAU 2006|
+| ❌ |precession_matrix_2000|    PMAT00|    precession matrix (including frame bias), IAU 2000|
+| ❌ |precession_matrix_2006|    PMAT06|    PB matrix, IAU 2006|
+| ❌ |precession_matrix_1976|    PMAT76|    precession matrix, IAU 1976|
+| ❌ |pn_2000|                   PN00|      bias/precession/nutation results, IAU 2000|
+| ❌ |pn_2000a|                  PN00A|     bias/precession/nutation, IAU 2000A|
+| ❌ |pn_2000b|                  PN00B|     bias/precession/nutation, IAU 2000B|
+| ❌ |pn_2006|                   PN06|      bias/precession/nutation results, IAU 2006|
+| ❌ |pn_2006a|                  PN06A|     bias/precession/nutation results, IAU 2006/2000A|
+| ❌ |pnm_2000a|                 PNM00A|    classical NPB matrix, IAU 2000A|
+| ❌ |pnm_2000b|                 PNM00B|    classical NPB matrix, IAU 2000B|
+| ❌ |pnm_2006a|                 PNM06A|    classical NPB matrix, IAU 2006/2000A|
+| ❌ |pnm_1980|                  PNM80|     precession/nutation matrix, IAU 1976/1980|
+| ❌ |p_2006_equinox|            P06E|      precession angles, IAU 2006, equinox based|
+| ❌ |polar_motion_matrix|       POM00|     polar motion matrix|
+| ❌ |pr_2000|                   PR00|      IAU 2000 precession adjustments|
+| ❌ |prec_1976|                 PREC76|    accumulated precession angles, IAU 1976|
+| ❌ |s_2000|                    S00|       the CIO locator s, given X,Y, IAU 2000A|
+| ❌ |s_2000a|                   S00A|      the CIO locator s, IAU 2000A|
+| ❌ |s_2000b|                   S00B|      the CIO locator s, IAU 2000B|
+| ❌ |s_2006|                    S06|       the CIO locator s, given X,Y, IAU 2006|
+| ❌ |s_2006a|                   S06A|      the CIO locator s, IAU 2006/2000A|
+| ❌ |sp_2000|                   SP00|      the TIO locator s', IERS 2003|
+| ❌ |xy_2006a|                  XY06|      CIP, IAU 2006/2000A, from series|
+| ❌ |xys_2000a|                 XYS00A|    CIP and s, IAU 2000A|
+| ❌ |xys_2000b|                 XYS00B|    CIP and s, IAU 2000B|
+| ❌ |xys_2006a|                 XYS06A|    CIP and s, IAU 2006/2000A|
+
 ## Vector/Matrix Library
 
 ### Operations on Angles

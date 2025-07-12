@@ -5,6 +5,7 @@ pub mod calendars;
 pub mod constants;
 pub mod earth_rot;
 pub mod ephemerides;
+pub mod pnp;
 pub mod time;
 pub mod vml;
 
@@ -151,6 +152,29 @@ pub use crate::earth_rot::{
 
 // Ephemerides
 pub use crate::ephemerides::{earth_pv as epv00, moon_pv as moon98, planet_pv as plan94};
+
+// Precession, nutation, polar motion
+pub use crate::pnp::{
+    bias_2000 as bi00, bias_precession_2000 as bp00, bias_precession_2006 as bp06,
+    c2i_2000a as c2i00a, c2i_2000b as c2i00b, c2i_2006 as c2i06a, c2i_npb as c2ibpn,
+    c2i_xy as c2ixy, c2i_xys as c2ixys, c2t_2000a as c2t00a, c2t_2000b as c2t00b,
+    c2t_2006 as c2t06a, c2t_cio as c2tcio, c2t_eqx as c2teqx, c2t_nutation as c2tpe,
+    eo_2006 as eo06a, eo_npb_s as eors, fw_to_rmatrix as fw2m, fw_to_xy as fw2xy,
+    long_term_precession as ltp, long_term_precession_b as ltpb,
+    long_term_precession_ecl as ltpecl, long_term_precession_eq as ltpequ, npb_to_xy as bpn2xy,
+    nutation_1980 as nut80, nutation_2000a as nut00a, nutation_2000b as nut00b,
+    nutation_2006 as nut06a, nutation_matrix as numat, nutation_matrix_1980 as nutm80,
+    nutation_matrix_2000a as num00a, nutation_matrix_2000b as num00b,
+    nutation_matrix_2006 as num06a, obliquity_1980 as obl80, obliquity_2006 as obl06,
+    p_2006_equinox as p06e, pn_2000 as pn00, pn_2000a as pn00a, pn_2000b as pn00b, pn_2006 as pn06,
+    pn_2006a as pn06a, pnm_1980 as pnm80, pnm_2000a as pnm00a, pnm_2000b as pnm00b,
+    pnm_2006a as pnm06a, polar_motion_matrix as pom00, pr_2000 as pr00, prec_1976 as prec76,
+    precession_bias_2006 as pb06, precession_fw_2006 as pfw06, precession_matrix_1976 as pmat76,
+    precession_matrix_2000 as pmat00, precession_matrix_2006 as pmat06, s_2000 as s00,
+    s_2000a as s00a, s_2000b as s00b, s_2006 as s06, s_2006a as s06a, sp_2000 as sp00,
+    xy_2006a as xy06, xy_to_c2t as c2txy, xys_2000a as xys00a, xys_2000b as xys00b,
+    xys_2006a as xys06a,
+};
 
 // Vector Math
 
