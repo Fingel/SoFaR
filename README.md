@@ -177,6 +177,23 @@ SoFar
 | ❌ |xys_2000b|                 XYS00B|    CIP and s, IAU 2000B|
 | ❌ |xys_2006a|                 XYS06A|    CIP and s, IAU 2006/2000A|
 
+### Fundamental arguments for nutation, etc.
+|  | sofar | iau | description |
+| --- | --- | --- | --- |
+| ❌ |fa_d_2003|     FAD03|     mean elongation of the Moon from the Sun|
+| ❌ |fa_e_2003|     FAE03|     mean longitude of Earth|
+| ❌ |fa_f_2003|     FAF03|     mean argument of the latitude of the Moon|
+| ❌ |fa_ju_2003|    FAJU03|    mean longitude of Jupiter|
+| ❌ |fa_l_2003|     FAL03|     mean anomaly of the Moon|
+| ❌ |fa_p_2003|     FALP03|    mean anomaly of the Sun|
+| ❌ |fa_ma_2003|    FAMA03|    mean longitude of Mars|
+| ❌ |fa_me_2003|    FAME03|    mean longitude of Mercury|
+| ❌ |fa_ne_2003|    FANE03|    mean longitude of Neptune|
+| ❌ |fa_om_2003|    FAOM03|    mean longitude of the Moon's ascending node|
+| ❌ |fa_pa_2003|    FAPA03|    general accumulated precession in longitude|
+| ❌ |fa_sa_2003|    FASA03|    mean longitude of Saturn|
+| ❌ |fa_ur_2003|    FAUR03|    mean longitude of Uranus|
+| ❌ |fa_ve_2003|    FAVE03|    mean longitude of Venus|
 ## Vector/Matrix Library
 
 ### Operations on Angles

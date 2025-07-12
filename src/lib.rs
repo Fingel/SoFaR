@@ -5,6 +5,7 @@ pub mod calendars;
 pub mod constants;
 pub mod earth_rot;
 pub mod ephemerides;
+pub mod fundamental;
 pub mod pnp;
 pub mod time;
 pub mod vml;
@@ -174,6 +175,14 @@ pub use crate::pnp::{
     s_2000a as s00a, s_2000b as s00b, s_2006 as s06, s_2006a as s06a, sp_2000 as sp00,
     xy_2006a as xy06, xy_to_c2t as c2txy, xys_2000a as xys00a, xys_2000b as xys00b,
     xys_2006a as xys06a,
+};
+
+// Fundamental arguments for nutation, etc.
+pub use crate::fundamental::{
+    fa_d_2003 as fad03, fa_e_2003 as fae03, fa_f_2003 as faf03, fa_ju_2003 as faju03,
+    fa_l_2003 as fal03, fa_ma_2003 as fama03, fa_me_2003 as fame03, fa_ne_2003 as fane03,
+    fa_om_2003 as faom03, fa_p_2003 as falp03, fa_pa_2003 as fapa03, fa_sa_2003 as fasa03,
+    fa_ur_2003 as faur03, fa_ve_2003 as fave03,
 };
 
 // Vector Math
