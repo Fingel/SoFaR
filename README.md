@@ -194,6 +194,21 @@ SoFar
 | ❌ |fa_sa_2003|    FASA03|    mean longitude of Saturn|
 | ❌ |fa_ur_2003|    FAUR03|    mean longitude of Uranus|
 | ❌ |fa_ve_2003|    FAVE03|    mean longitude of Venus|
+
+### Star Catalog Conversions
+|  | sofar | iau | description |
+| --- | --- | --- | --- |
+| ❌ |fk5_to_hip|              FK52H|     transform FK5 star data into the Hipparcos system|
+| ❌ |fk5_to_hipp_rot|         FK5HIP|    FK5 to Hipparcos rotation and spin|
+| ❌ |fk5_to_hipp_zero|        FK5HZ|     FK5 to Hipparcos assuming zero Hipparcos proper motion|
+| ❌ |hipp_to_fk5|             H2FK5|     transform Hipparcos star data into the FK5 system|
+| ❌ |hipp_to_fk5_zero|        HFK5Z|     Hipparcos to FK5 assuming zero Hipparcos proper motion|
+| ❌ |fk4_to_fk5|              FK425|     transform FK4 star data into FK5|
+| ❌ |fk4_to_fk5_zero|         FK45Z|     FK4 to FK5 assuming zero FK5 proper motion|
+| ❌ |fk5_to_fk4|              FK524|     transform FK5 star data into FK4|
+| ❌ |fk5_to_fk4_zero|         FK54Z|     FK5 to FK4 assuming zero FK5 proper motion|
+
+
 ## Vector/Matrix Library
 
 ### Operations on Angles

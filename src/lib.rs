@@ -7,6 +7,7 @@ pub mod earth_rot;
 pub mod ephemerides;
 pub mod fundamental;
 pub mod pnp;
+pub mod stars;
 pub mod time;
 pub mod vml;
 
@@ -183,6 +184,13 @@ pub use crate::fundamental::{
     fa_l_2003 as fal03, fa_ma_2003 as fama03, fa_me_2003 as fame03, fa_ne_2003 as fane03,
     fa_om_2003 as faom03, fa_p_2003 as falp03, fa_pa_2003 as fapa03, fa_sa_2003 as fasa03,
     fa_ur_2003 as faur03, fa_ve_2003 as fave03,
+};
+
+// Star catalog conversions
+pub use crate::stars::{
+    fk4_to_fk5 as fk425, fk4_to_fk5_zero as fk45z, fk5_to_fk4 as fk524, fk5_to_fk4_zero as fk54z,
+    fk5_to_hip as fk52h, fk5_to_hipp_rot as fk5hip, fk5_to_hipp_zero as fk5hz,
+    hipp_to_fk5 as h2fk5, hipp_to_fk5_zero as hfk5z,
 };
 
 // Vector Math
