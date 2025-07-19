@@ -1,11 +1,10 @@
 //! Ecliptic coordinates
-//!
-//! ec_to_ircs_2006         ECEQ06    ecliptic to ICRS, IAU 2006
-//! rm_ec_to_ircs_2006      ECM06     rotation matrix, ICRS to ecliptic, IAU 2006
-//! icrs_to_ec_2006         EQEC06    ICRS to ecliptic, IAU 2006
-//! ec_to_icrs_long         LTECEQ    ecliptic to ICRS, long term
-//! rm_ec_to_icrs_long      LTECM     rotation matrix, ICRS to ecliptic, long-term
-//! icrs_to_ec_long         LTEQEC    ICRS to ecliptic, long term
+//! - ec_to_ircs_2006         ECEQ06    ecliptic to ICRS, IAU 2006
+//! - rm_ec_to_ircs_2006      ECM06     rotation matrix, ICRS to ecliptic, IAU 2006
+//! - icrs_to_ec_2006         EQEC06    ICRS to ecliptic, IAU 2006
+//! - ec_to_icrs_long         LTECEQ    ecliptic to ICRS, long term
+//! - rm_ec_to_icrs_long      LTECM     rotation matrix, ICRS to ecliptic, long-term
+//! - icrs_to_ec_long         LTEQEC    ICRS to ecliptic, long term
 pub fn ec_to_ircs_2006() {
     todo!();
 }
