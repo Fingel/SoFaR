@@ -7,6 +7,7 @@ pub mod earth_rot;
 pub mod ecliptic;
 pub mod ephemerides;
 pub mod fundamental;
+pub mod galactic;
 pub mod pnp;
 pub mod stars;
 pub mod time;
@@ -199,6 +200,9 @@ pub use crate::ecliptic::{
     ec_to_icrs_long as lteceq, ec_to_ircs_2006 as eceq06, icrs_to_ec_2006 as eqec06,
     icrs_to_ec_long as lteqec, rm_ec_to_icrs_long as ltecm, rm_ec_to_ircs_2006 as ecm06,
 };
+
+// Galactic Coordinates
+pub use crate::galactic::{galactic_to_icrs as g2icrs, icrs_to_galactic as icrs2g};
 
 // Vector Math
 

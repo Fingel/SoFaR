@@ -208,7 +208,6 @@ SoFar
 | ❌ |fk5_to_fk4|              FK524|     transform FK5 star data into FK4|
 | ❌ |fk5_to_fk4_zero|         FK54Z|     FK5 to FK4 assuming zero FK5 proper motion|
 
-
 ### Ecliptic Coordinates
 |  | sofar | iau | description |
 | --- | --- | --- | --- |
@@ -218,6 +217,12 @@ SoFar
 | ❌ |ec_to_icrs_long|         LTECEQ|    ecliptic to ICRS, long term|
 | ❌ |rm_ec_to_icrs_long|      LTECM|     rotation matrix, ICRS to ecliptic, long-term|
 | ❌ |icrs_to_ec_long|         LTEQEC|    ICRS to ecliptic, long term|
+
+### Galactic Coordinates
+|  | sofar | iau | description |
+| --- | --- | --- | --- |
+|❌ |galactic_to_icrs|      G2ICRS|    transform IAU 1958 galactic coordinates to ICRS|
+|❌ |icrs_to_galactic|      ICRS2G|    transform ICRS coordinates to IAU 1958 Galactic|
 
 ## Vector/Matrix Library
 
