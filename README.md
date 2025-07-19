@@ -209,6 +209,16 @@ SoFar
 | ❌ |fk5_to_fk4_zero|         FK54Z|     FK5 to FK4 assuming zero FK5 proper motion|
 
 
+### Ecliptic Coordinates
+|  | sofar | iau | description |
+| --- | --- | --- | --- |
+| ❌ |ec_to_ircs_2006|         ECEQ06|    ecliptic to ICRS, IAU 2006|
+| ❌ |rm_ec_to_ircs_2006|      ECM06|     rotation matrix, ICRS to ecliptic, IAU 2006|
+| ❌ |icrs_to_ec_2006|         EQEC06|    ICRS to ecliptic, IAU 2006|
+| ❌ |ec_to_icrs_long|         LTECEQ|    ecliptic to ICRS, long term|
+| ❌ |rm_ec_to_icrs_long|      LTECM|     rotation matrix, ICRS to ecliptic, long-term|
+| ❌ |icrs_to_ec_long|         LTEQEC|    ICRS to ecliptic, long term|
+
 ## Vector/Matrix Library
 
 ### Operations on Angles

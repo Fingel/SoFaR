@@ -4,6 +4,7 @@ pub mod astrometry;
 pub mod calendars;
 pub mod constants;
 pub mod earth_rot;
+pub mod ecliptic;
 pub mod ephemerides;
 pub mod fundamental;
 pub mod pnp;
@@ -191,6 +192,12 @@ pub use crate::stars::{
     fk4_to_fk5 as fk425, fk4_to_fk5_zero as fk45z, fk5_to_fk4 as fk524, fk5_to_fk4_zero as fk54z,
     fk5_to_hip as fk52h, fk5_to_hipp_rot as fk5hip, fk5_to_hipp_zero as fk5hz,
     hipp_to_fk5 as h2fk5, hipp_to_fk5_zero as hfk5z,
+};
+
+// Ecliptic Coordinates
+pub use crate::ecliptic::{
+    ec_to_icrs_long as lteceq, ec_to_ircs_2006 as eceq06, icrs_to_ec_2006 as eqec06,
+    icrs_to_ec_long as lteqec, rm_ec_to_icrs_long as ltecm, rm_ec_to_ircs_2006 as ecm06,
 };
 
 // Vector Math
